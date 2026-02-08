@@ -1,0 +1,92 @@
+[
+    {
+        "data": "2026-02-06T20:00:00Z",
+        "time_casa": "Leeds United FC",
+        "time_fora": "Nottingham Forest FC",
+        "placar_casa": 3,
+        "placar_fora": 1,
+        "brasao_casa": "https://crests.football-data.org/341.png",
+        "brasao_fora": "https://crests.football-data.org/351.png"
+    },
+    {
+        "data": "2026-02-07T12:30:00Z",
+        "time_casa": "Manchester United FC",
+        "time_fora": "Tottenham Hotspur FC",
+        "placar_casa": 2,
+        "placar_fora": 0,
+        "brasao_casa": "https://crests.football-data.org/66.png",
+        "brasao_fora": "https://crests.football-data.org/73.png"
+    },
+    {
+        "data": "2026-02-07T15:00:00Z",
+        "time_casa": "AFC Bournemouth",
+        "time_fora": "Aston Villa FC",
+        "placar_casa": 1,
+        "placar_fora": 1,
+        "brasao_casa": "https://crests.football-data.org/bournemouth.png",
+        "brasao_fora": "https://crests.football-data.org/58.png"
+    },
+    {
+        "data": "2026-02-07T15:00:00Z",
+        "time_casa": "Arsenal FC",
+        "time_fora": "Sunderland AFC",
+        "placar_casa": 3,
+        "placar_fora": 0,
+        "brasao_casa": "https://crests.football-data.org/57.png",
+        "brasao_fora": "https://crests.football-data.org/71.png"
+    },
+    {
+        "data": "2026-02-07T15:00:00Z",
+        "time_casa": "Burnley FC",
+        "time_fora": "West Ham United FC",
+        "placar_casa": 0,
+        "placar_fora": 2,
+        "brasao_casa": "https://crests.football-data.org/328.png",
+        "brasao_fora": "https://crests.football-data.org/563.png"
+    },
+    {
+        "data": "2026-02-07T15:00:00Z",
+        "time_casa": "Fulham FC",
+        "time_fora": "Everton FC",
+        "placar_casa": 1,
+        "placar_fora": 2,
+        "brasao_casa": "https://crests.football-data.org/63.png",
+        "brasao_fora": "https://crests.football-data.org/62.png"
+    },
+    {
+        "data": "2026-02-07T15:00:00Z",
+        "time_casa": "Wolverhampton Wanderers FC",
+        "time_fora": "Chelsea FC",
+        "placar_casa": 1,
+        "placar_fora": 3,
+        "brasao_casa": "https://crests.football-data.org/76.png",
+        "brasao_fora": "https://crests.football-data.org/61.png"
+    },
+    {
+        "data": "2026-02-07T17:30:00Z",
+        "time_casa": "Newcastle United FC",
+        "time_fora": "Brentford FC",
+        "placar_casa": 2,
+        "placar_fora": 3,
+        "brasao_casa": "https://crests.football-data.org/67.png",
+        "brasao_fora": "https://crests.football-data.org/402.png"
+    },
+    {
+        "data": "2026-02-08T14:00:00Z",
+        "time_casa": "Brighton & Hove Albion FC",
+        "time_fora": "Crystal Palace FC",
+        "placar_casa": 0,
+        "placar_fora": 1,
+        "brasao_casa": "https://crests.football-data.org/397.png",
+        "brasao_fora": "https://crests.football-data.org/354.png"
+    },
+    {
+        "data": "2026-02-08T16:30:00Z",
+        "time_casa": "Liverpool FC",
+        "time_fora": "Manchester City FC",
+        "placar_casa": 1,
+        "placar_fora": 3,
+        "brasao_casa": "https://crests.football-data.org/64.png",
+        "brasao_fora": "https://crests.football-data.org/65.png"
+    }
+]
