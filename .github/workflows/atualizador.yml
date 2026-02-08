@@ -28,8 +28,8 @@ jobs:
           API_TOKEN: ${{ secrets.API_TOKEN }} # Pega a chave dos segredos
         run: python script_coleta.py
 
-      - name: Commitar e Push se houver mudanças
+      - name: Commitar e Push
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "Atualizando resultados: robot"
-          file_pattern: "resultados.json"
+          commit_message: "Atualizando dados: robot"
+          file_pattern: "dados_futebol.json"  # <--- MUDOU AQUI
