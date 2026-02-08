@@ -1,0 +1,35 @@
+name: Atualizar Resultados Futebol
+
+on:
+  schedule:
+    - cron: '0 * * * *' # Roda a cada 1 hora (no minuto 0)
+  workflow_dispatch: # Permite rodar manualmente clicando num botão
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Permissão para commitar o arquivo json
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Instalar dependências
+        run: pip install -r requirements.txt
+
+      - name: Rodar script de coleta
+        env: 
+          API_TOKEN: ${{ secrets.API_TOKEN }} # Pega a chave dos segredos
+        run: python script_coleta.py
+
+      - name: Commitar e Push se houver mudanças
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Atualizando resultados: robot"
+          file_pattern: "resultados.json"
