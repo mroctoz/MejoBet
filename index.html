@@ -3,195 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FutCenter - Resultados e Agenda</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>MejoBet - Apostas Esportivas</title>
+    <!-- Ícones -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        /* Animação suave */
-        .fade-in { animation: fadeIn 0.5s ease-in; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        /* Scrollbar fina */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 4px; }
-        ::-webkit-scrollbar-track { background: #1f2937; }
-    </style>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Nosso CSS -->
+    <link rel="stylesheet" href="style.css">
 </head>
-<body class="bg-gray-900 text-gray-100 font-sans min-h-screen">
+<body>
 
-    <!-- Navbar -->
-    <nav class="bg-gray-800 border-b border-gray-700 sticky top-0 z-50">
-        <div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
-            <h1 class="text-xl font-bold text-green-400 flex items-center gap-2">
-                <i class="fas fa-futbol"></i> FutCenter
-            </h1>
-            <div class="text-xs text-gray-400" id="last-update">Atualizando...</div>
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">
+            <i class="fas fa-chart-line"></i> MejoBet
         </div>
-    </nav>
+        <div class="user-info">
+            <div class="balance-container">
+                <span class="balance-label">Saldo:</span>
+                <span class="balance-value" id="user-balance">R$ 0,00</span>
+            </div>
+            <button class="btn-profile"><i class="fas fa-user-circle"></i></button>
+        </div>
+    </header>
 
-    <!-- Conteúdo Principal -->
-    <main class="max-w-4xl mx-auto px-4 py-6 space-y-8">
+    <div class="main-layout">
+        
+        <!-- Sidebar Esquerda (Navegação) -->
+        <aside class="sidebar-left">
+            <nav class="nav-menu">
+                <a href="#" class="nav-item active" onclick="filtrarLiga('todos')"><i class="fas fa-home"></i> Tudo</a>
+                <a href="#" class="nav-item" onclick="filtrarLiga('Brasileirão')"><i class="fas fa-futbol"></i> Brasileirão</a>
+                <a href="#" class="nav-item" onclick="filtrarLiga('Premier League')"><i class="fas fa-crown"></i> Inglaterra</a>
+                <a href="#" class="nav-item" onclick="filtrarLiga('La Liga')"><i class="fas fa-flag"></i> Espanha</a>
+                <a href="#" class="nav-item" onclick="filtrarLiga('Champions')"><i class="fas fa-trophy"></i> Champions</a>
+                <div class="divider"></div>
+                <a href="#" class="nav-item" onclick="mostrarMinhasApostas()"><i class="fas fa-ticket-alt"></i> Minhas Apostas</a>
+            </nav>
+        </aside>
 
-        <!-- Seção 1: Últimos Resultados -->
-        <section>
-            <h2 class="text-lg font-semibold mb-4 border-l-4 border-green-500 pl-3">Últimos Resultados</h2>
-            <div id="container-resultados" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <!-- JS vai preencher aqui -->
-                <div class="animate-pulse flex space-x-4 bg-gray-800 p-4 rounded">
-                    <div class="h-12 w-12 bg-gray-700 rounded-full"></div>
-                    <div class="flex-1 space-y-2 py-1">
-                        <div class="h-4 bg-gray-700 rounded w-3/4"></div>
-                        <div class="h-4 bg-gray-700 rounded w-1/2"></div>
-                    </div>
+        <!-- Conteúdo Central -->
+        <main class="content">
+            <!-- Banner de Destaque -->
+            <div class="hero-banner">
+                <h2>Aposte nos jogos de hoje</h2>
+                <p>As melhores odds do mercado simulado.</p>
+            </div>
+
+            <!-- Filtros de Data -->
+            <div class="date-filters" id="date-filters">
+                <!-- Gerado via JS -->
+            </div>
+
+            <!-- Lista de Jogos -->
+            <div id="games-container" class="games-list">
+                <div class="loading">
+                    <i class="fas fa-spinner fa-spin"></i> Carregando odds...
                 </div>
             </div>
-        </section>
 
-        <!-- Seção 2: Agenda (Próximos 7 dias) -->
-        <section>
-            <h2 class="text-lg font-semibold mb-4 border-l-4 border-blue-500 pl-3">Próximos 7 Dias</h2>
-            <div id="container-proximos" class="space-y-6">
-                <!-- JS vai preencher aqui agrupado por data -->
+            <!-- Área de Minhas Apostas (Oculta inicialmente) -->
+            <div id="my-bets-view" class="hidden">
+                <h3><i class="fas fa-history"></i> Histórico de Apostas</h3>
+                <div id="bets-history-list"></div>
             </div>
-        </section>
+        </main>
 
-    </main>
-
-    <footer class="text-center py-8 text-gray-600 text-sm">
-        Dados fornecidos por football-data.org via GitHub Actions
-    </footer>
-
-    <script>
-        const API_FILE = 'dados_futebol.json'; // O novo nome do arquivo
-
-        // Formata data simples (12/05)
-        const formatDataDia = (isoDate) => {
-            const d = new Date(isoDate);
-            return d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
-        };
-
-        // Formata hora (19:30)
-        const formatHora = (isoDate) => {
-            const d = new Date(isoDate);
-            return d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-        };
-
-        // Formata cabeçalho de grupo (Terça-feira, 14 de Fevereiro)
-        const formatHeaderData = (isoDate) => {
-            const d = new Date(isoDate);
-            // Capitalizar primeira letra
-            const diaSemana = d.toLocaleDateString('pt-BR', { weekday: 'long' });
-            const dataCompleta = d.toLocaleDateString('pt-BR', { day: 'numeric', month: 'long' });
-            return `${diaSemana.charAt(0).toUpperCase() + diaSemana.slice(1)}, ${dataCompleta}`;
-        };
-
-        function criarCardJogo(jogo, ehResultado) {
-            const corPlacar = ehResultado ? 'text-white' : 'text-gray-400';
-            const statusTexto = ehResultado ? 
-                `<span class="text-green-400 text-xs font-bold">ENCERRADO</span>` : 
-                `<span class="text-blue-400 text-xs font-bold">${formatHora(jogo.data)}</span>`;
-
-            const placarDisplay = ehResultado ? 
-                `${jogo.placar_casa} - ${jogo.placar_fora}` : 
-                `<span class="text-xs">vs</span>`;
-
-            return `
-                <div class="bg-gray-800 rounded-lg p-3 shadow-md border border-gray-700 flex items-center justify-between hover:border-gray-600 transition fade-in">
-                    <!-- Liga -->
-                    <div class="absolute top-0 left-0 bg-gray-700 text-[10px] px-2 py-0.5 rounded-br-lg text-gray-300">
-                        ${jogo.liga}
-                    </div>
-
-                    <!-- Time Casa -->
-                    <div class="flex flex-col items-center w-1/3 mt-2">
-                        <img src="${jogo.brasao_casa}" class="h-8 w-8 object-contain mb-1" onerror="this.src='https://via.placeholder.com/30?text=?'">
-                        <span class="text-xs text-center font-medium leading-tight truncate w-full">${jogo.time_casa}</span>
-                    </div>
-
-                    <!-- Placar / Hora -->
-                    <div class="flex flex-col items-center justify-center w-1/4 mt-2">
-                        <div class="text-xl font-bold ${corPlacar} bg-gray-900/50 px-3 py-1 rounded">
-                            ${placarDisplay}
-                        </div>
-                        <div class="mt-1">${statusTexto}</div>
-                    </div>
-
-                    <!-- Time Fora -->
-                    <div class="flex flex-col items-center w-1/3 mt-2">
-                        <img src="${jogo.brasao_fora}" class="h-8 w-8 object-contain mb-1" onerror="this.src='https://via.placeholder.com/30?text=?'">
-                        <span class="text-xs text-center font-medium leading-tight truncate w-full">${jogo.time_fora}</span>
-                    </div>
+        <!-- Sidebar Direita (Boletim de Apostas) -->
+        <aside class="sidebar-right">
+            <div class="bet-slip">
+                <div class="bet-slip-header">
+                    <h3>Boletim</h3>
+                    <span class="badge" id="cart-count">0</span>
                 </div>
-            `;
-        }
-
-        async function carregarDados() {
-            try {
-                const response = await fetch(API_FILE);
-                if (!response.ok) throw new Error("Arquivo JSON não encontrado (Aguarde o robô).");
                 
-                const dados = await response.json();
-                
-                // 1. Renderizar Resultados
-                const divRes = document.getElementById('container-resultados');
-                divRes.innerHTML = '';
-                
-                if (dados.resultados.length === 0) {
-                    divRes.innerHTML = '<p class="text-gray-500 col-span-2 text-center py-4">Nenhum resultado nas últimas 24h.</p>';
-                } else {
-                    dados.resultados.forEach(jogo => {
-                        divRes.innerHTML += criarCardJogo(jogo, true);
-                    });
-                }
+                <div id="bet-slip-items" class="bet-slip-items">
+                    <p class="empty-msg">Clique nas odds para adicionar uma aposta.</p>
+                </div>
 
-                // 2. Renderizar Próximos (Agrupados por dia)
-                const divProx = document.getElementById('container-proximos');
-                divProx.innerHTML = '';
+                <div class="bet-slip-footer">
+                    <div class="total-row">
+                        <span>Total Odds:</span>
+                        <span id="total-odds">1.00</span>
+                    </div>
+                    <div class="input-group">
+                        <label>Valor da Aposta (R$)</label>
+                        <input type="number" id="bet-amount" placeholder="Valor" min="1">
+                    </div>
+                    <div class="potential-return">
+                        <span>Retorno Potencial:</span>
+                        <span id="potential-return" class="green-text">R$ 0,00</span>
+                    </div>
+                    <button id="place-bet-btn" class="btn-place-bet" disabled>Apostar</button>
+                </div>
+            </div>
+        </aside>
+    </div>
 
-                if (dados.proximos.length === 0) {
-                    divProx.innerHTML = '<p class="text-gray-500 text-center py-4">Nenhum jogo agendado para os próximos 7 dias.</p>';
-                } else {
-                    // Agrupar jogos por data (YYYY-MM-DD)
-                    const grupos = {};
-                    dados.proximos.forEach(jogo => {
-                        const dataChave = jogo.data.split('T')[0];
-                        if (!grupos[dataChave]) grupos[dataChave] = [];
-                        grupos[dataChave].push(jogo);
-                    });
+    <!-- Modal de Resultado -->
+    <div id="notification-area"></div>
 
-                    // Criar HTML para cada grupo
-                    for (const [data, jogosDoDia] of Object.entries(grupos)) {
-                        let htmlGrupo = `
-                            <div class="fade-in">
-                                <h3 class="text-sm font-bold text-gray-400 mb-2 flex items-center gap-2">
-                                    <i class="far fa-calendar-alt"></i> ${formatHeaderData(data)}
-                                </h3>
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        `;
-                        
-                        jogosDoDia.forEach(jogo => {
-                            htmlGrupo += criarCardJogo(jogo, false);
-                        });
-
-                        htmlGrupo += `</div></div>`;
-                        divProx.innerHTML += htmlGrupo;
-                    }
-                }
-
-                // Atualizar timestamp
-                document.getElementById('last-update').innerText = 'Atualizado em: ' + new Date().toLocaleTimeString();
-
-            } catch (error) {
-                console.error(error);
-                document.querySelector('main').innerHTML = `
-                    <div class="text-center p-10 text-red-400 border border-red-900 bg-red-900/20 rounded">
-                        <i class="fas fa-exclamation-triangle text-3xl mb-4"></i>
-                        <p>Aguardando primeira sincronização do sistema...</p>
-                        <p class="text-sm opacity-75 mt-2">O robô do GitHub está coletando os dados.</p>
-                    </div>`;
-            }
-        }
-
-        carregarDados();
-    </script>
+    <!-- Script Lógico -->
+    <script src="app.js"></script>
 </body>
 </html>
