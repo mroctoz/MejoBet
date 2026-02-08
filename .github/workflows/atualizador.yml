@@ -1,15 +1,18 @@
-name: Atualizar Resultados Futebol
+name: Atualizar Resultados e Odds
 
 on:
   schedule:
-    - cron: '0 * * * *' # Roda a cada 1 hora (no minuto 0)
-  workflow_dispatch: # Permite rodar manualmente clicando num botão
+    # 0 */6 * * * significa: Rodar no minuto 0 a cada 6 horas
+    # Horários UTC: 00:00, 06:00, 12:00, 18:00
+    # (No Brasil será: 21:00, 03:00, 09:00, 15:00 aprox.)
+    - cron: '0 */6 * * *' 
+  workflow_dispatch: # Permite rodar manualmente no botão "Run workflow"
 
 jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: write # Permissão para commitar o arquivo json
+      contents: write # Permissão para salvar o arquivo json
 
     steps:
       - name: Checkout do código
@@ -21,15 +24,17 @@ jobs:
           python-version: '3.9'
 
       - name: Instalar dependências
-        run: pip install -r requirements.txt
+        run: pip install requests
 
       - name: Rodar script de coleta
         env: 
-          API_TOKEN: ${{ secrets.API_TOKEN }} # Pega a chave dos segredos
+          # Aqui ele pega as duas chaves que você salvou nos Secrets
+          API_TOKEN: ${{ secrets.API_TOKEN }} 
+          ODD_TOKEN: ${{ secrets.ODD_TOKEN }}
         run: python script_coleta.py
 
       - name: Commitar e Push
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "Atualizando dados: robot"
-          file_pattern: "dados_futebol.json"  # <--- MUDOU AQUI
+          commit_message: "Atualizando odds e resultados: robot"
+          file_pattern: "dados_futebol.json"
