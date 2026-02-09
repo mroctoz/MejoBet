@@ -159,3 +159,17 @@ body { background-color: var(--bg-dark); color: var(--text-primary); height: 100
 .bet-won { border-left: 4px solid var(--accent); background: #1e3a2a; padding: 10px; margin-bottom: 5px; }
 .bet-lost { border-left: 4px solid var(--danger); background: #3a1e1e; padding: 10px; margin-bottom: 5px; }
 .bet-open { border-left: 4px solid #aaa; background: #333; padding: 10px; margin-bottom: 5px; }
+
+/* Adicione no final do style.css */
+.team-logo-placeholder {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: bold;
+    margin-right: 10px;
+}
