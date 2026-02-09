@@ -1,5 +1,5 @@
 {
-    "atualizacao": "2026-02-09T07:07:27.350316",
+    "atualizacao": "2026-02-09T13:14:16.486803",
     "resultados": [
         {
             "id": 537050,
@@ -26,18 +26,6 @@
             "brasao_fora": "https://crests.football-data.org/82.png"
         },
         {
-            "id": 538026,
-            "data": "2026-02-08T14:00:00Z",
-            "status": "FINISHED",
-            "liga": "Premier League",
-            "time_casa": "Brighton Hove",
-            "time_fora": "Crystal Palace",
-            "placar_casa": 0,
-            "placar_fora": 1,
-            "brasao_casa": "https://crests.football-data.org/397.png",
-            "brasao_fora": "https://crests.football-data.org/354.png"
-        },
-        {
             "id": 537054,
             "data": "2026-02-08T14:00:00Z",
             "status": "FINISHED",
@@ -48,6 +36,18 @@
             "placar_fora": 1,
             "brasao_casa": "https://crests.football-data.org/5890.png",
             "brasao_fora": "https://crests.football-data.org/115.png"
+        },
+        {
+            "id": 538026,
+            "data": "2026-02-08T14:00:00Z",
+            "status": "FINISHED",
+            "liga": "Premier League",
+            "time_casa": "Brighton Hove",
+            "time_fora": "Crystal Palace",
+            "placar_casa": 0,
+            "placar_fora": 1,
+            "brasao_casa": "https://crests.football-data.org/397.png",
+            "brasao_fora": "https://crests.football-data.org/354.png"
         },
         {
             "id": 544432,
@@ -143,8 +143,8 @@
             "time_fora": "Cremonese",
             "brasao_casa": "",
             "brasao_fora": "",
-            "odds_casa": 1.36,
-            "odds_empate": 4.75,
+            "odds_casa": 1.35,
+            "odds_empate": 4.6,
             "odds_fora": 8.0,
             "bookmaker": "William Hill"
         },
@@ -156,9 +156,9 @@
             "time_fora": "Cagliari",
             "brasao_casa": "",
             "brasao_fora": "",
-            "odds_casa": 1.54,
+            "odds_casa": 1.53,
             "odds_empate": 4.21,
-            "odds_fora": 7.6,
+            "odds_fora": 7.9,
             "bookmaker": "1xBet"
         },
         {
@@ -169,9 +169,9 @@
             "time_fora": "Espanyol",
             "brasao_casa": "",
             "brasao_fora": "",
-            "odds_casa": 1.66,
-            "odds_empate": 3.8,
-            "odds_fora": 4.5,
+            "odds_casa": 1.64,
+            "odds_empate": 3.7,
+            "odds_fora": 4.6,
             "bookmaker": "PMU (FR)"
         },
         {
@@ -195,9 +195,9 @@
             "time_fora": "Leeds United",
             "brasao_casa": "",
             "brasao_fora": "",
-            "odds_casa": 1.53,
-            "odds_empate": 4.25,
-            "odds_fora": 5.5,
+            "odds_casa": 1.5,
+            "odds_empate": 4.4,
+            "odds_fora": 5.75,
             "bookmaker": "Betclic (FR)"
         },
         {
@@ -221,9 +221,9 @@
             "time_fora": "Manchester United",
             "brasao_casa": "",
             "brasao_fora": "",
-            "odds_casa": 4.2,
+            "odds_casa": 4.1,
             "odds_empate": 4.1,
-            "odds_fora": 1.69,
+            "odds_fora": 1.71,
             "bookmaker": "MyBookie.ag"
         },
         {
@@ -247,9 +247,9 @@
             "time_fora": "Brighton and Hove Albion",
             "brasao_casa": "",
             "brasao_fora": "",
-            "odds_casa": 1.82,
-            "odds_empate": 3.55,
-            "odds_fora": 3.5,
+            "odds_casa": 1.88,
+            "odds_empate": 3.7,
+            "odds_fora": 3.65,
             "bookmaker": "Winamax (FR)"
         },
         {
@@ -261,8 +261,8 @@
             "brasao_casa": "",
             "brasao_fora": "",
             "odds_casa": 1.5,
-            "odds_empate": 3.9,
-            "odds_fora": 5.1,
+            "odds_empate": 4.1,
+            "odds_fora": 5.8,
             "bookmaker": "Winamax (FR)"
         },
         {
@@ -273,9 +273,9 @@
             "time_fora": "Fulham",
             "brasao_casa": "",
             "brasao_fora": "",
-            "odds_casa": 1.33,
+            "odds_casa": 1.32,
             "odds_empate": 5.1,
-            "odds_fora": 7.2,
+            "odds_fora": 7.3,
             "bookmaker": "Parions Sport (FR)"
         },
         {
@@ -286,7 +286,7 @@
             "time_fora": "Wolverhampton Wanderers",
             "brasao_casa": "",
             "brasao_fora": "",
-            "odds_casa": 1.65,
+            "odds_casa": 1.64,
             "odds_empate": 3.65,
             "odds_fora": 4.8,
             "bookmaker": "Parions Sport (FR)"
@@ -299,8 +299,8 @@
             "time_fora": "Liverpool",
             "brasao_casa": "",
             "brasao_fora": "",
-            "odds_casa": 4.5,
-            "odds_empate": 3.7,
+            "odds_casa": 4.45,
+            "odds_empate": 3.75,
             "odds_fora": 1.67,
             "bookmaker": "Parions Sport (FR)"
         },
@@ -312,9 +312,9 @@
             "time_fora": "Coritiba",
             "brasao_casa": "",
             "brasao_fora": "",
-            "odds_casa": 2.45,
+            "odds_casa": 2.4,
             "odds_empate": 3.0,
-            "odds_fora": 3.25,
+            "odds_fora": 3.3,
             "bookmaker": "Coolbet"
         },
         {
@@ -351,9 +351,9 @@
             "time_fora": "Bahia",
             "brasao_casa": "",
             "brasao_fora": "",
-            "odds_casa": 2.15,
-            "odds_empate": 2.95,
-            "odds_fora": 2.6,
+            "odds_casa": 2.1,
+            "odds_empate": 3.0,
+            "odds_fora": 2.65,
             "bookmaker": "Parions Sport (FR)"
         },
         {
@@ -377,9 +377,9 @@
             "time_fora": "Arsenal",
             "brasao_casa": "",
             "brasao_fora": "",
-            "odds_casa": 4.4,
-            "odds_empate": 3.75,
-            "odds_fora": 1.6,
+            "odds_casa": 4.7,
+            "odds_empate": 4.0,
+            "odds_fora": 1.62,
             "bookmaker": "Winamax (FR)"
         },
         {
@@ -455,9 +455,9 @@
             "time_fora": "CA Osasuna",
             "brasao_casa": "",
             "brasao_fora": "",
-            "odds_casa": 2.7,
+            "odds_casa": 2.6,
             "odds_empate": 3.1,
-            "odds_fora": 2.5,
+            "odds_fora": 2.6,
             "bookmaker": "PMU (FR)"
         },
         {
@@ -468,9 +468,9 @@
             "time_fora": "Celta Vigo",
             "brasao_casa": "",
             "brasao_fora": "",
-            "odds_casa": 2.43,
-            "odds_empate": 3.45,
-            "odds_fora": 3.19,
+            "odds_casa": 2.54,
+            "odds_empate": 3.38,
+            "odds_fora": 3.07,
             "bookmaker": "1xBet"
         },
         {
@@ -481,9 +481,9 @@
             "time_fora": "Fiorentina",
             "brasao_casa": "",
             "brasao_fora": "",
-            "odds_casa": 1.62,
+            "odds_casa": 1.64,
             "odds_empate": 3.5,
-            "odds_fora": 4.5,
+            "odds_fora": 4.3,
             "bookmaker": "PMU (FR)"
         },
         {
@@ -520,9 +520,9 @@
             "time_fora": "Alav\u00e9s",
             "brasao_casa": "",
             "brasao_fora": "",
-            "odds_casa": 2.15,
-            "odds_empate": 3.35,
-            "odds_fora": 3.98,
+            "odds_casa": 2.2,
+            "odds_empate": 3.29,
+            "odds_fora": 3.9,
             "bookmaker": "1xBet"
         },
         {
@@ -572,9 +572,9 @@
             "time_fora": "Athletic Bilbao",
             "brasao_casa": "",
             "brasao_fora": "",
-            "odds_casa": 3.75,
+            "odds_casa": 3.67,
             "odds_empate": 3.23,
-            "odds_fora": 2.27,
+            "odds_fora": 2.31,
             "bookmaker": "1xBet"
         },
         {
@@ -585,9 +585,9 @@
             "time_fora": "Genoa",
             "brasao_casa": "",
             "brasao_fora": "",
-            "odds_casa": 3.05,
+            "odds_casa": 3.2,
             "odds_empate": 2.98,
-            "odds_fora": 2.58,
+            "odds_fora": 2.48,
             "bookmaker": "Nordic Bet"
         },
         {
@@ -599,8 +599,8 @@
             "brasao_casa": "",
             "brasao_fora": "",
             "odds_casa": 2.15,
-            "odds_empate": 2.7,
-            "odds_fora": 3.25,
+            "odds_empate": 2.8,
+            "odds_fora": 3.15,
             "bookmaker": "PMU (FR)"
         },
         {
@@ -612,8 +612,8 @@
             "brasao_casa": "",
             "brasao_fora": "",
             "odds_casa": 4.3,
-            "odds_empate": 3.65,
-            "odds_fora": 1.72,
+            "odds_empate": 3.8,
+            "odds_fora": 1.78,
             "bookmaker": "Winamax (DE)"
         },
         {
@@ -638,8 +638,8 @@
             "brasao_casa": "",
             "brasao_fora": "",
             "odds_casa": 2.84,
-            "odds_empate": 3.5,
-            "odds_fora": 2.54,
+            "odds_empate": 3.48,
+            "odds_fora": 2.55,
             "bookmaker": "Marathon Bet"
         },
         {
@@ -689,9 +689,9 @@
             "time_fora": "Barcelona",
             "brasao_casa": "",
             "brasao_fora": "",
-            "odds_casa": 5.6,
-            "odds_empate": 5.3,
-            "odds_fora": 1.34,
+            "odds_casa": 5.9,
+            "odds_empate": 5.7,
+            "odds_fora": 1.37,
             "bookmaker": "Winamax (FR)"
         },
         {
@@ -729,8 +729,8 @@
             "brasao_casa": "",
             "brasao_fora": "",
             "odds_casa": 2.1,
-            "odds_empate": 3.75,
-            "odds_fora": 3.55,
+            "odds_empate": 3.65,
+            "odds_fora": 3.65,
             "bookmaker": "Unibet (SE)"
         },
         {
@@ -769,7 +769,7 @@
             "brasao_fora": "",
             "odds_casa": 3.4,
             "odds_empate": 3.5,
-            "odds_fora": 1.81,
+            "odds_fora": 1.82,
             "bookmaker": "Parions Sport (FR)"
         },
         {
@@ -780,8 +780,8 @@
             "time_fora": "Como",
             "brasao_casa": "",
             "brasao_fora": "",
-            "odds_casa": 2.12,
-            "odds_empate": 3.45,
+            "odds_casa": 2.1,
+            "odds_empate": 3.5,
             "odds_fora": 3.75,
             "bookmaker": "Unibet (NL)"
         },
@@ -793,9 +793,9 @@
             "time_fora": "Arsenal",
             "brasao_casa": "",
             "brasao_fora": "",
-            "odds_casa": 8.35,
-            "odds_empate": 5.1,
-            "odds_fora": 1.35,
+            "odds_casa": 8.57,
+            "odds_empate": 5.25,
+            "odds_fora": 1.33,
             "bookmaker": "Pinnacle"
         },
         {
@@ -884,9 +884,9 @@
             "time_fora": "Oviedo",
             "brasao_casa": "",
             "brasao_fora": "",
-            "odds_casa": 1.6,
-            "odds_empate": 3.6,
-            "odds_fora": 5.4,
+            "odds_casa": 1.56,
+            "odds_empate": 3.65,
+            "odds_fora": 5.9,
             "bookmaker": "Winamax (DE)"
         },
         {
@@ -910,9 +910,9 @@
             "time_fora": "Leeds United",
             "brasao_casa": "",
             "brasao_fora": "",
-            "odds_casa": 1.76,
-            "odds_empate": 3.7,
-            "odds_fora": 4.0,
+            "odds_casa": 1.72,
+            "odds_empate": 3.65,
+            "odds_fora": 4.3,
             "bookmaker": "Winamax (DE)"
         },
         {
@@ -936,9 +936,9 @@
             "time_fora": "Burnley",
             "brasao_casa": "",
             "brasao_fora": "",
-            "odds_casa": 1.18,
-            "odds_empate": 4.9,
-            "odds_fora": 7.25,
+            "odds_casa": 1.2,
+            "odds_empate": 6.25,
+            "odds_fora": 8.5,
             "bookmaker": "Winamax (FR)"
         },
         {
@@ -988,9 +988,9 @@
             "time_fora": "Real Madrid",
             "brasao_casa": "",
             "brasao_fora": "",
-            "odds_casa": 4.6,
+            "odds_casa": 4.8,
             "odds_empate": 4.2,
-            "odds_fora": 1.58,
+            "odds_fora": 1.56,
             "bookmaker": "Winamax (DE)"
         },
         {
@@ -1003,7 +1003,7 @@
             "brasao_fora": "",
             "odds_casa": 3.1,
             "odds_empate": 3.1,
-            "odds_fora": 2.3,
+            "odds_fora": 2.25,
             "bookmaker": "William Hill"
         },
         {
@@ -1014,9 +1014,9 @@
             "time_fora": "Newcastle United",
             "brasao_casa": "",
             "brasao_fora": "",
-            "odds_casa": 1.5,
-            "odds_empate": 4.6,
-            "odds_fora": 4.9,
+            "odds_casa": 1.47,
+            "odds_empate": 4.7,
+            "odds_fora": 5.1,
             "bookmaker": "Winamax (DE)"
         },
         {
@@ -1053,7 +1053,7 @@
             "time_fora": "Sevilla",
             "brasao_casa": "",
             "brasao_fora": "",
-            "odds_casa": 2.45,
+            "odds_casa": 2.5,
             "odds_empate": 2.95,
             "odds_fora": 2.9,
             "bookmaker": "Winamax (DE)"
@@ -1118,9 +1118,9 @@
             "time_fora": "Levante",
             "brasao_casa": "",
             "brasao_fora": "",
-            "odds_casa": 1.12,
-            "odds_empate": 8.5,
-            "odds_fora": 12.5,
+            "odds_casa": 1.08,
+            "odds_empate": 11.0,
+            "odds_fora": 15.0,
             "bookmaker": "Winamax (DE)"
         },
         {
@@ -1131,9 +1131,9 @@
             "time_fora": "Arsenal",
             "brasao_casa": "",
             "brasao_fora": "",
-            "odds_casa": 4.7,
-            "odds_empate": 3.6,
-            "odds_fora": 1.43,
+            "odds_casa": 5.7,
+            "odds_empate": 3.95,
+            "odds_fora": 1.48,
             "bookmaker": "Winamax (FR)"
         },
         {
@@ -1157,8 +1157,8 @@
             "time_fora": "Parma",
             "brasao_casa": "",
             "brasao_fora": "",
-            "odds_casa": 1.32,
-            "odds_empate": 4.3,
+            "odds_casa": 1.31,
+            "odds_empate": 4.4,
             "odds_fora": 7.3,
             "bookmaker": "Parions Sport (FR)"
         },
@@ -1170,9 +1170,9 @@
             "time_fora": "Mallorca",
             "brasao_casa": "",
             "brasao_fora": "",
-            "odds_casa": 1.82,
+            "odds_casa": 1.8,
             "odds_empate": 3.4,
-            "odds_fora": 4.1,
+            "odds_fora": 4.2,
             "bookmaker": "Winamax (DE)"
         },
         {
@@ -1183,9 +1183,9 @@
             "time_fora": "Cremonese",
             "brasao_casa": "",
             "brasao_fora": "",
-            "odds_casa": 1.33,
-            "odds_empate": 4.1,
-            "odds_fora": 7.5,
+            "odds_casa": 1.32,
+            "odds_empate": 4.2,
+            "odds_fora": 7.4,
             "bookmaker": "Parions Sport (FR)"
         },
         {
@@ -1197,7 +1197,7 @@
             "brasao_casa": "",
             "brasao_fora": "",
             "odds_casa": 1.64,
-            "odds_empate": 3.55,
+            "odds_empate": 3.6,
             "odds_fora": 4.15,
             "bookmaker": "Parions Sport (FR)"
         },
@@ -1209,9 +1209,9 @@
             "time_fora": "Pisa",
             "brasao_casa": "",
             "brasao_fora": "",
-            "odds_casa": 1.66,
+            "odds_casa": 1.62,
             "odds_empate": 3.5,
-            "odds_fora": 4.1,
+            "odds_fora": 4.5,
             "bookmaker": "PMU (FR)"
         },
         {
@@ -1222,8 +1222,8 @@
             "time_fora": "Udinese",
             "brasao_casa": "",
             "brasao_fora": "",
-            "odds_casa": 1.76,
-            "odds_empate": 3.25,
+            "odds_casa": 1.77,
+            "odds_empate": 3.2,
             "odds_fora": 3.95,
             "bookmaker": "Parions Sport (FR)"
         },
@@ -1235,9 +1235,9 @@
             "time_fora": "Manchester United",
             "brasao_casa": "",
             "brasao_fora": "",
-            "odds_casa": 3.05,
-            "odds_empate": 3.3,
-            "odds_fora": 1.8,
+            "odds_casa": 3.4,
+            "odds_empate": 3.6,
+            "odds_fora": 1.88,
             "bookmaker": "Winamax (FR)"
         },
         {
@@ -1249,8 +1249,8 @@
             "brasao_casa": "",
             "brasao_fora": "",
             "odds_casa": 2.25,
-            "odds_empate": 3.0,
-            "odds_fora": 3.2,
+            "odds_empate": 2.95,
+            "odds_fora": 3.25,
             "bookmaker": "Winamax (DE)"
         },
         {
