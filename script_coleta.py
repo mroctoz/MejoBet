@@ -3,140 +3,117 @@ import json
 import os
 from datetime import datetime, timedelta
 
-# --- Configurações das Chaves ---
+# --- Configurações ---
 TOKEN_RESULTADOS = os.environ.get("API_TOKEN") # Football-data.org
 TOKEN_ODDS = os.environ.get("ODD_TOKEN")       # The Odds API
 
-# --- Configurações de Ligas ---
-# Mapeamento: Chave da TheOddsAPI : ID da Football-Data
-MAPA_LIGAS = [
-    {"odds_key": "soccer_brazil_campeonato", "res_id": "BSA", "nome": "Brasileirão"},
-    {"odds_key": "soccer_epl",               "res_id": "PL",  "nome": "Premier League"},
-    {"odds_key": "soccer_spain_la_liga",     "res_id": "PD",  "nome": "La Liga"},
-    {"odds_key": "soccer_uefa_champs_league", "res_id": "CL",  "nome": "Champions League"},
-    {"odds_key": "soccer_italy_serie_a",     "res_id": "SA",  "nome": "Serie A"},
+# --- Ligas mapeadas ---
+# Precisamos mapear para saber qual liga estamos processando
+LIGAS_ODDS = [
+    {"key": "soccer_brazil_campeonato", "nome": "Brasileirão"},
+    {"key": "soccer_epl",               "nome": "Premier League"},
+    {"key": "soccer_spain_la_liga",     "nome": "La Liga"},
+    {"key": "soccer_uefa_champs_league", "nome": "Champions League"},
+    {"key": "soccer_italy_serie_a",     "nome": "Serie A"},
+    {"key": "soccer_france_ligue_one",   "nome": "Ligue 1"},
+    {"key": "soccer_germany_bundesliga", "nome": "Bundesliga"}
 ]
 
-def buscar_resultados_anteriores():
-    """Busca jogos finalizados ontem/hoje para validar apostas"""
-    print("Buscando resultados finalizados...")
-    resultados = []
+def buscar_resultados_passados():
+    """Busca apenas resultados finais (quem ganhou) para pagar apostas"""
+    print("Buscando resultados...")
+    if not TOKEN_RESULTADOS: return []
     
-    if not TOKEN_RESULTADOS:
-        print("Aviso: API_TOKEN não encontrado. Resultados não serão atualizados.")
-        return []
-
-    headers = {"X-Auth-Token": TOKEN_RESULTADOS}
-    ids_ligas = ",".join([l["res_id"] for l in MAPA_LIGAS])
-    
-    # Busca jogos de ontem e hoje
-    hoje = datetime.now().date()
-    ontem = hoje - timedelta(days=1)
-    
+    # Busca jogos de ontem (para saber quem ganhou)
     url = "https://api.football-data.org/v4/matches"
-    params = {
-        "competitions": ids_ligas,
-        "dateFrom": ontem.strftime('%Y-%m-%d'),
-        "dateTo": hoje.strftime('%Y-%m-%d'),
-        "status": "FINISHED"
-    }
-
+    headers = {"X-Auth-Token": TOKEN_RESULTADOS}
+    ontem = (datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d')
+    hoje = datetime.now().strftime('%Y-%m-%d')
+    
     try:
+        # Pega as principais ligas pelo código da API football-data
+        params = {"competitions": "BSA,PL,PD,CL,SA,FL1,BL1", "dateFrom": ontem, "dateTo": hoje, "status": "FINISHED"}
         resp = requests.get(url, headers=headers, params=params)
+        
         if resp.status_code == 200:
             matches = resp.json().get('matches', [])
+            limpos = []
             for m in matches:
-                resultados.append({
-                    "id": m['id'], # ID do football-data
+                limpos.append({
+                    "id": str(m['id']), # Convertendo pra string pra padronizar
                     "data": m['utcDate'],
                     "status": "FINISHED",
                     "liga": m['competition']['name'],
                     "time_casa": m['homeTeam']['shortName'] or m['homeTeam']['name'],
                     "time_fora": m['awayTeam']['shortName'] or m['awayTeam']['name'],
                     "placar_casa": m['score']['fullTime']['home'],
-                    "placar_fora": m['score']['fullTime']['away'],
-                    "brasao_casa": m['homeTeam']['crest'],
-                    "brasao_fora": m['awayTeam']['crest']
+                    "placar_fora": m['score']['fullTime']['away']
                 })
+            return limpos
     except Exception as e:
-        print(f"Erro buscando resultados: {e}")
-        
-    return resultados
+        print(f"Erro resultados: {e}")
+        return []
+    return []
 
 def buscar_odds_futuras():
-    """Busca odds reais da Bet365 para os próximos jogos"""
-    print("Buscando odds reais...")
-    proximos = []
-    
-    if not TOKEN_ODDS:
-        print("Erro: ODD_TOKEN não encontrado!")
-        return []
+    """Busca as odds REAIS da The Odds API"""
+    print("Buscando odds...")
+    if not TOKEN_ODDS: return []
 
-    for liga in MAPA_LIGAS:
-        url = f"https://api.the-odds-api.com/v4/sports/{liga['odds_key']}/odds"
+    jogos_futuros = []
+
+    for liga in LIGAS_ODDS:
+        url = f"https://api.the-odds-api.com/v4/sports/{liga['key']}/odds"
         params = {
             "apiKey": TOKEN_ODDS,
-            "regions": "eu", # Região (eu=Europa, uk=Reino Unido)
-            "markets": "h2h", # Head to head (Vencedor)
+            "regions": "eu",
+            "markets": "h2h",
             "oddsFormat": "decimal"
         }
 
         try:
             resp = requests.get(url, params=params)
-            if resp.status_code != 200:
-                print(f"Erro na liga {liga['nome']}: {resp.status_code}")
-                continue
-
             dados = resp.json()
-            
-            for jogo in dados:
-                # Pega odds da Bet365 ou a primeira que tiver
-                bookmakers = jogo.get('bookmakers', [])
-                if not bookmakers: continue
-                
-                # Tenta achar Bet365, senão pega o primeiro
-                bookie = next((b for b in bookmakers if b['key'] == 'bet365'), bookmakers[0])
-                market = bookie['markets'][0]
-                outcomes = market['outcomes']
-                
-                odd_casa = next((o['price'] for o in outcomes if o['name'] == jogo['home_team']), 1.01)
-                odd_fora = next((o['price'] for o in outcomes if o['name'] == jogo['away_team']), 1.01)
-                odd_empate = next((o['price'] for o in outcomes if o['name'] == 'Draw'), 1.01)
 
-                proximos.append({
-                    "id": jogo['id'], # ID da TheOddsApi (String)
-                    "data": jogo['commence_time'],
-                    "liga": liga['nome'],
-                    "time_casa": jogo['home_team'],
-                    "time_fora": jogo['away_team'],
-                    # Como essa API não tem logo, mandamos vazio e o front resolve
-                    "brasao_casa": "", 
-                    "brasao_fora": "",
-                    "odds_casa": odd_casa,
-                    "odds_empate": odd_empate,
-                    "odds_fora": odd_fora,
-                    "bookmaker": bookie['title']
-                })
-                
+            if isinstance(dados, list):
+                for jogo in dados:
+                    # Tenta pegar odds
+                    bookmakers = jogo.get('bookmakers', [])
+                    if not bookmakers: continue
+
+                    # Pega a primeira casa de aposta disponível
+                    market = bookmakers[0]['markets'][0]
+                    outcomes = market['outcomes']
+
+                    # Mapeia as odds com segurança
+                    odd_home = next((x['price'] for x in outcomes if x['name'] == jogo['home_team']), 0)
+                    odd_away = next((x['price'] for x in outcomes if x['name'] == jogo['away_team']), 0)
+                    odd_draw = next((x['price'] for x in outcomes if x['name'] == 'Draw'), 0)
+
+                    jogos_futuros.append({
+                        "id": jogo['id'],
+                        "data": jogo['commence_time'],
+                        "liga": liga['nome'],
+                        "time_casa": jogo['home_team'],
+                        "time_fora": jogo['away_team'],
+                        "odds_casa": odd_home,
+                        "odds_empate": odd_draw,
+                        "odds_fora": odd_away
+                    })
         except Exception as e:
-            print(f"Erro processando liga {liga['nome']}: {e}")
+            print(f"Erro na liga {liga['nome']}: {e}")
 
-    # Ordenar por data
-    proximos.sort(key=lambda x: x['data'])
-    return proximos
+    return jogos_futuros
 
-def main():
-    dados_finais = {
-        "atualizacao": datetime.now().isoformat(),
-        "resultados": buscar_resultados_anteriores(),
+# Execução Principal
+if __name__ == "__main__":
+    dados = {
+        "resultados": buscar_resultados_passados(),
         "proximos": buscar_odds_futuras()
     }
     
-    # Salvar
+    # Salva o arquivo JSON final
     with open("dados_futebol.json", "w", encoding="utf-8") as f:
-        json.dump(dados_finais, f, indent=4)
+        json.dump(dados, f, indent=4)
     
-    print(f"Concluído! {len(dados_finais['resultados'])} resultados e {len(dados_finais['proximos'])} odds capturadas.")
-
-if __name__ == "__main__":
-    main()
+    print("Dados atualizados com sucesso.")
