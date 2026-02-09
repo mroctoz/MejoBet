@@ -1,5 +1,5 @@
 {
-    "atualizacao": "2026-02-09T02:29:17.314281",
+    "atualizacao": "2026-02-09T07:07:27.350316",
     "resultados": [
         {
             "id": 537050,
@@ -26,18 +26,6 @@
             "brasao_fora": "https://crests.football-data.org/82.png"
         },
         {
-            "id": 537054,
-            "data": "2026-02-08T14:00:00Z",
-            "status": "FINISHED",
-            "liga": "Serie A",
-            "time_casa": "Lecce",
-            "time_fora": "Udinese",
-            "placar_casa": 2,
-            "placar_fora": 1,
-            "brasao_casa": "https://crests.football-data.org/5890.png",
-            "brasao_fora": "https://crests.football-data.org/115.png"
-        },
-        {
             "id": 538026,
             "data": "2026-02-08T14:00:00Z",
             "status": "FINISHED",
@@ -50,16 +38,16 @@
             "brasao_fora": "https://crests.football-data.org/354.png"
         },
         {
-            "id": 544438,
-            "data": "2026-02-08T15:15:00Z",
+            "id": 537054,
+            "data": "2026-02-08T14:00:00Z",
             "status": "FINISHED",
-            "liga": "Primera Division",
-            "time_casa": "Sevilla FC",
-            "time_fora": "Girona",
-            "placar_casa": 1,
+            "liga": "Serie A",
+            "time_casa": "Lecce",
+            "time_fora": "Udinese",
+            "placar_casa": 2,
             "placar_fora": 1,
-            "brasao_casa": "https://crests.football-data.org/559.png",
-            "brasao_fora": "https://crests.football-data.org/298.png"
+            "brasao_casa": "https://crests.football-data.org/5890.png",
+            "brasao_fora": "https://crests.football-data.org/115.png"
         },
         {
             "id": 544432,
@@ -72,6 +60,18 @@
             "placar_fora": 2,
             "brasao_casa": "https://crests.football-data.org/77.png",
             "brasao_fora": "https://crests.football-data.org/88.png"
+        },
+        {
+            "id": 544438,
+            "data": "2026-02-08T15:15:00Z",
+            "status": "FINISHED",
+            "liga": "Primera Division",
+            "time_casa": "Sevilla FC",
+            "time_fora": "Girona",
+            "placar_casa": 1,
+            "placar_fora": 1,
+            "brasao_casa": "https://crests.football-data.org/559.png",
+            "brasao_fora": "https://crests.football-data.org/298.png"
         },
         {
             "id": 538030,
@@ -156,9 +156,9 @@
             "time_fora": "Cagliari",
             "brasao_casa": "",
             "brasao_fora": "",
-            "odds_casa": 1.53,
-            "odds_empate": 4.26,
-            "odds_fora": 7.7,
+            "odds_casa": 1.54,
+            "odds_empate": 4.21,
+            "odds_fora": 7.6,
             "bookmaker": "1xBet"
         },
         {
@@ -196,7 +196,7 @@
             "brasao_casa": "",
             "brasao_fora": "",
             "odds_casa": 1.53,
-            "odds_empate": 4.3,
+            "odds_empate": 4.25,
             "odds_fora": 5.5,
             "bookmaker": "Betclic (FR)"
         },
@@ -221,7 +221,7 @@
             "time_fora": "Manchester United",
             "brasao_casa": "",
             "brasao_fora": "",
-            "odds_casa": 4.3,
+            "odds_casa": 4.2,
             "odds_empate": 4.1,
             "odds_fora": 1.69,
             "bookmaker": "MyBookie.ag"
@@ -274,8 +274,8 @@
             "brasao_casa": "",
             "brasao_fora": "",
             "odds_casa": 1.33,
-            "odds_empate": 5.0,
-            "odds_fora": 7.1,
+            "odds_empate": 5.1,
+            "odds_fora": 7.2,
             "bookmaker": "Parions Sport (FR)"
         },
         {
@@ -286,9 +286,9 @@
             "time_fora": "Wolverhampton Wanderers",
             "brasao_casa": "",
             "brasao_fora": "",
-            "odds_casa": 1.66,
+            "odds_casa": 1.65,
             "odds_empate": 3.65,
-            "odds_fora": 4.75,
+            "odds_fora": 4.8,
             "bookmaker": "Parions Sport (FR)"
         },
         {
@@ -300,7 +300,7 @@
             "brasao_casa": "",
             "brasao_fora": "",
             "odds_casa": 4.5,
-            "odds_empate": 3.75,
+            "odds_empate": 3.7,
             "odds_fora": 1.67,
             "bookmaker": "Parions Sport (FR)"
         },
@@ -378,7 +378,7 @@
             "brasao_casa": "",
             "brasao_fora": "",
             "odds_casa": 4.4,
-            "odds_empate": 3.8,
+            "odds_empate": 3.75,
             "odds_fora": 1.6,
             "bookmaker": "Winamax (FR)"
         },
@@ -455,9 +455,9 @@
             "time_fora": "CA Osasuna",
             "brasao_casa": "",
             "brasao_fora": "",
-            "odds_casa": 2.6,
+            "odds_casa": 2.7,
             "odds_empate": 3.1,
-            "odds_fora": 2.6,
+            "odds_fora": 2.5,
             "bookmaker": "PMU (FR)"
         },
         {
@@ -546,9 +546,9 @@
             "time_fora": "Real Sociedad",
             "brasao_casa": "",
             "brasao_fora": "",
-            "odds_casa": 1.4,
+            "odds_casa": 1.39,
             "odds_empate": 5.4,
-            "odds_fora": 6.8,
+            "odds_fora": 7.0,
             "bookmaker": "Codere (IT)"
         },
         {
@@ -572,9 +572,9 @@
             "time_fora": "Athletic Bilbao",
             "brasao_casa": "",
             "brasao_fora": "",
-            "odds_casa": 3.72,
+            "odds_casa": 3.75,
             "odds_empate": 3.23,
-            "odds_fora": 2.29,
+            "odds_fora": 2.27,
             "bookmaker": "1xBet"
         },
         {
@@ -729,7 +729,7 @@
             "brasao_casa": "",
             "brasao_fora": "",
             "odds_casa": 2.1,
-            "odds_empate": 3.7,
+            "odds_empate": 3.75,
             "odds_fora": 3.55,
             "bookmaker": "Unibet (SE)"
         },
@@ -767,9 +767,9 @@
             "time_fora": "Villarreal",
             "brasao_casa": "",
             "brasao_fora": "",
-            "odds_casa": 3.45,
+            "odds_casa": 3.4,
             "odds_empate": 3.5,
-            "odds_fora": 1.8,
+            "odds_fora": 1.81,
             "bookmaker": "Parions Sport (FR)"
         },
         {
@@ -1040,9 +1040,9 @@
             "time_fora": "Torino",
             "brasao_casa": "",
             "brasao_fora": "",
-            "odds_casa": 2.38,
-            "odds_empate": 2.9,
-            "odds_fora": 3.2,
+            "odds_casa": 2.3,
+            "odds_empate": 2.88,
+            "odds_fora": 3.3,
             "bookmaker": "888sport"
         },
         {
@@ -1196,9 +1196,9 @@
             "time_fora": "Valencia",
             "brasao_casa": "",
             "brasao_fora": "",
-            "odds_casa": 1.63,
-            "odds_empate": 3.6,
-            "odds_fora": 4.25,
+            "odds_casa": 1.64,
+            "odds_empate": 3.55,
+            "odds_fora": 4.15,
             "bookmaker": "Parions Sport (FR)"
         },
         {
@@ -1222,10 +1222,10 @@
             "time_fora": "Udinese",
             "brasao_casa": "",
             "brasao_fora": "",
-            "odds_casa": 1.85,
-            "odds_empate": 3.4,
-            "odds_fora": 4.0,
-            "bookmaker": "William Hill"
+            "odds_casa": 1.76,
+            "odds_empate": 3.25,
+            "odds_fora": 3.95,
+            "bookmaker": "Parions Sport (FR)"
         },
         {
             "id": "b2dfd255beca9618d6796a7e79a4b398",
@@ -1248,9 +1248,9 @@
             "time_fora": "Girona",
             "brasao_casa": "",
             "brasao_fora": "",
-            "odds_casa": 2.3,
+            "odds_casa": 2.25,
             "odds_empate": 3.0,
-            "odds_fora": 3.15,
+            "odds_fora": 3.2,
             "bookmaker": "Winamax (DE)"
         },
         {
