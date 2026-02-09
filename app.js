@@ -1,324 +1,237 @@
-// --- Configurações e Estado ---
-const API_URL = 'dados_futebol.json'; // O mesmo arquivo gerado pelo Python
+// --- Configurações ---
+const API_URL = 'dados_futebol.json';
 let USER_BALANCE = 250.00;
-let cart = []; // Aposta atual no boletim
-let allMatches = []; // Todos os jogos carregados
-let myBets = []; // Histórico de apostas
+let cart = [];
+let myBets = [];
 
 // --- Inicialização ---
 document.addEventListener('DOMContentLoaded', () => {
     carregarUsuario();
-    carregarDados();
-    setupListeners();
+    carregarDados(); // Carrega o JSON
+    
+    // Listeners de botões
+    const btnApostar = document.getElementById('place-bet-btn');
+    if(btnApostar) btnApostar.addEventListener('click', realizarAposta);
+    
+    const inputValor = document.getElementById('bet-amount');
+    if(inputValor) inputValor.addEventListener('input', calcularRetorno);
 });
 
+// --- Carregar Dados do Usuário ---
 function carregarUsuario() {
-    // Carregar saldo
     const savedBalance = localStorage.getItem('mejoBet_balance');
     if (savedBalance) USER_BALANCE = parseFloat(savedBalance);
     atualizarDisplaySaldo();
 
-    // Carregar apostas antigas
     const savedBets = localStorage.getItem('mejoBet_history');
     if (savedBets) myBets = JSON.parse(savedBets);
 }
 
-// --- Lógica Principal de Dados ---
+// --- Carregar JSON do Github ---
 async function carregarDados() {
+    const container = document.getElementById('games-container');
+    
     try {
-        const response = await fetch(API_URL);
-        if(!response.ok) throw new Error("Erro ao ler JSON");
+        // Adiciona um timestamp para evitar cache do navegador antigo
+        const response = await fetch(API_URL + '?t=' + new Date().getTime());
+        
+        if(!response.ok) throw new Error("JSON ainda não gerado.");
+        
         const data = await response.json();
         
-        // Vamos unir proximos e resultados para verificação
-        allMatches = [...data.proximos, ...data.resultados];
+        // Verifica se existem jogos futuros
+        if (!data.proximos || data.proximos.length === 0) {
+            container.innerHTML = '<p class="text-center p-4">Nenhum jogo com odds disponível no momento.</p>';
+            return;
+        }
 
-        // 1. Verificar se alguma aposta aberta foi finalizada
-        verificarResultados(data.resultados);
-
-        // 2. Renderizar jogos futuros na tela
         renderizarJogos(data.proximos);
 
     } catch (error) {
-        console.error("Erro:", error);
-        document.getElementById('games-container').innerHTML = 
-            '<p style="text-align:center; padding:20px;">Erro ao carregar jogos. Verifique se o script Python rodou.</p>';
+        console.error("Erro carregando:", error);
+        container.innerHTML = `
+            <div class="p-4 text-center text-red-400">
+                <p>Aguardando atualização das Odds...</p>
+                <small>${error.message}</small>
+            </div>`;
     }
 }
 
-// --- O Gerador de Odds Simuladas ---
-// Como a API free não tem odds, criamos odds baseadas em hash do nome
-// para que sejam sempre as mesmas para o mesmo jogo.
-function gerarOdds(match) {
-    // Seed simples baseado no ID do jogo
-    const seed = match.id;
-    const random = (seed * 9301 + 49297) % 233280;
-    const normalized = random / 233280;
-
-    // Simulação: Times variam entre 1.50 e 4.00
-    let oddCasa = (1.5 + (normalized * 2.5)).toFixed(2);
-    let oddFora = (1.5 + ((1-normalized) * 2.5)).toFixed(2);
-    let oddEmpate = (2.8 + (normalized * 0.5)).toFixed(2);
-
-    return { casa: oddCasa, empate: oddEmpate, fora: oddFora };
-}
-
-// --- Renderização ---
+// --- Renderizar na Tela ---
 function renderizarJogos(jogos) {
     const container = document.getElementById('games-container');
     container.innerHTML = '';
 
-    if(jogos.length === 0) {
-        container.innerHTML = '<p class="empty-msg">Nenhum jogo disponível para aposta.</p>';
-        return;
-    }
+    // Ordenar por data
+    jogos.sort((a, b) => new Date(a.data) - new Date(b.data));
 
-    // Agrupar por data
-    const grupos = {};
-    jogos.forEach(j => {
-        const data = j.data.split('T')[0];
-        if(!grupos[data]) grupos[data] = [];
-        grupos[data].push(j);
-    });
+    jogos.forEach(match => {
+        // PROTEÇÃO CONTRA NaN: Se a odd não vier, usa 1.00
+        const oddCasa = parseFloat(match.odds_casa) || 1.00;
+        const oddEmpate = parseFloat(match.odds_empate) || 1.00;
+        const oddFora = parseFloat(match.odds_fora) || 1.00;
 
-    for(const [data, lista] of Object.entries(grupos)) {
-        // Cabeçalho da data
-        const dateHeader = document.createElement('div');
-        dateHeader.className = 'game-group-date';
-        const d = new Date(data);
-        dateHeader.innerText = d.toLocaleDateString('pt-BR', {weekday: 'long', day:'numeric', month:'long'});
-        container.appendChild(dateHeader);
+        // Se as odds forem 0 ou 1, o jogo não tem apostas abertas, então pulamos ou mostramos bloqueado
+        if (oddCasa <= 1.01) return; 
 
-        lista.forEach(match => {
-            const odds = gerarOdds(match);
-            const card = document.createElement('div');
-            card.className = 'match-card';
+        // Gerar cores para os times (já que não temos logos)
+        const corCasa = stringToColor(match.time_casa);
+        const corFora = stringToColor(match.time_fora);
+
+        // Criar elemento HTML
+        const card = document.createElement('div');
+        card.className = 'match-card';
+        card.innerHTML = `
+            <div class="match-meta">
+                <div>${match.liga}</div>
+                <div>${new Date(match.data).toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'})}</div>
+            </div>
             
-            card.innerHTML = `
-                <div class="match-meta">
-                    <div>${match.liga}</div>
-                    <div>${new Date(match.data).toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'})}</div>
+            <div class="teams-info">
+                <div class="team-row">
+                    <div class="team-logo-placeholder" style="background:${corCasa}">${match.time_casa.charAt(0)}</div>
+                    <span>${match.time_casa}</span>
                 </div>
-                <div class="teams-info">
-                    <div class="team-row">
-                        <img src="${match.brasao_casa}" class="team-logo" onerror="this.src='https://via.placeholder.com/20'">
-                        <span>${match.time_casa}</span>
-                    </div>
-                    <div class="team-row">
-                        <img src="${match.brasao_fora}" class="team-logo" onerror="this.src='https://via.placeholder.com/20'">
-                        <span>${match.time_fora}</span>
-                    </div>
+                <div class="team-row">
+                    <div class="team-logo-placeholder" style="background:${corFora}">${match.time_fora.charAt(0)}</div>
+                    <span>${match.time_fora}</span>
                 </div>
-                <div class="odds-grid">
-                    <button class="odd-btn" onclick="selecionarAposta(${match.id}, 'HOME', ${odds.casa}, '${match.time_casa}')">
-                        <span class="odd-label">1</span>
-                        <span>${odds.casa}</span>
-                    </button>
-                    <button class="odd-btn" onclick="selecionarAposta(${match.id}, 'DRAW', ${odds.empate}, 'Empate')">
-                        <span class="odd-label">X</span>
-                        <span>${odds.empate}</span>
-                    </button>
-                    <button class="odd-btn" onclick="selecionarAposta(${match.id}, 'AWAY', ${odds.fora}, '${match.time_fora}')">
-                        <span class="odd-label">2</span>
-                        <span>${odds.fora}</span>
-                    </button>
-                </div>
-            `;
-            container.appendChild(card);
-        });
-    }
+            </div>
+
+            <div class="odds-grid">
+                <button class="odd-btn" onclick="selecionarAposta('${match.id}', 'HOME', ${oddCasa}, '${match.time_casa}')">
+                    <span class="odd-label">1</span> <span>${oddCasa.toFixed(2)}</span>
+                </button>
+                <button class="odd-btn" onclick="selecionarAposta('${match.id}', 'DRAW', ${oddEmpate}, 'Empate')">
+                    <span class="odd-label">X</span> <span>${oddEmpate.toFixed(2)}</span>
+                </button>
+                <button class="odd-btn" onclick="selecionarAposta('${match.id}', 'AWAY', ${oddFora}, '${match.time_fora}')">
+                    <span class="odd-label">2</span> <span>${oddFora.toFixed(2)}</span>
+                </button>
+            </div>
+        `;
+        container.appendChild(card);
+    });
+}
+
+// --- Funções Auxiliares de Estilo ---
+function stringToColor(str) {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    const c = (hash & 0x00FFFFFF).toString(16).toUpperCase();
+    return '#' + '00000'.substring(0, 6 - c.length) + c;
 }
 
 // --- Lógica de Apostas (Carrinho) ---
-function selecionarAposta(matchId, pick, odd, nomeSelecao) {
-    // Limpa seleções visuais anteriores
-    document.querySelectorAll('.odd-btn').forEach(b => b.classList.remove('selected'));
-    // (Opcional: Adicionar classe selected ao botão clicado visualmente seria complexo sem ID unico, 
-    // mas para simplificar, vamos focar no Bet Slip)
-
-    // Adiciona ao carrinho (Simples: Apenas 1 aposta por vez neste MVP)
-    cart = [{
-        matchId: matchId,
-        pick: pick, // 'HOME', 'DRAW', 'AWAY'
-        odd: parseFloat(odd),
-        selectionName: nomeSelecao
-    }];
-
+function selecionarAposta(id, tipo, valorOdd, nome) {
+    // Remove seleção visual anterior
+    document.querySelectorAll('.odd-btn').forEach(btn => btn.style.border = 'none');
+    
+    // Atualiza carrinho
+    cart = [{ id, tipo, odd: valorOdd, nome }];
     atualizarBoletim();
 }
 
 function atualizarBoletim() {
-    const container = document.getElementById('bet-slip-items');
+    const slip = document.getElementById('bet-slip-items');
+    const totalOdds = document.getElementById('total-odds');
     const btn = document.getElementById('place-bet-btn');
-    const input = document.getElementById('bet-amount');
 
     if (cart.length === 0) {
-        container.innerHTML = '<p class="empty-msg">Selecione uma cotação.</p>';
+        slip.innerHTML = '<p class="text-gray-500 text-sm">Selecione uma aposta.</p>';
         btn.disabled = true;
-        document.getElementById('total-odds').innerText = '1.00';
         return;
     }
 
     const item = cart[0];
-    container.innerHTML = `
-        <div class="bet-item">
-            <div class="bet-item-title">${item.selectionName}</div>
-            <div class="bet-item-sel">Vencedor do Encontro @ ${item.odd}</div>
-            <i class="fas fa-times remove-bet" onclick="limparCarrinho()"></i>
+    slip.innerHTML = `
+        <div class="bg-gray-800 p-3 rounded border border-green-500 relative">
+            <div class="font-bold text-sm text-white">${item.nome}</div>
+            <div class="text-xs text-green-400">Cotação: ${item.odd.toFixed(2)}</div>
+            <button onclick="limparCarrinho()" class="absolute top-1 right-2 text-red-500">x</button>
         </div>
     `;
-
-    document.getElementById('total-odds').innerText = item.odd.toFixed(2);
+    totalOdds.innerText = item.odd.toFixed(2);
     btn.disabled = false;
-    
-    // Atualizar retorno potencial se já tiver valor
     calcularRetorno();
 }
 
 function calcularRetorno() {
-    const valor = parseFloat(document.getElementById('bet-amount').value);
-    if (cart.length > 0 && valor > 0) {
-        const retorno = (valor * cart[0].odd).toFixed(2);
-        document.getElementById('potential-return').innerText = `R$ ${retorno}`;
+    const input = document.getElementById('bet-amount');
+    const display = document.getElementById('potential-return');
+    if(cart.length > 0 && input.value) {
+        const val = parseFloat(input.value);
+        display.innerText = 'R$ ' + (val * cart[0].odd).toFixed(2);
     } else {
-        document.getElementById('potential-return').innerText = `R$ 0,00`;
+        display.innerText = 'R$ 0,00';
     }
 }
 
 function limparCarrinho() {
     cart = [];
+    document.getElementById('bet-amount').value = '';
     atualizarBoletim();
 }
 
 function realizarAposta() {
-    const valor = parseFloat(document.getElementById('bet-amount').value);
+    const val = parseFloat(document.getElementById('bet-amount').value);
+    if (!val || val <= 0) return alert("Digite um valor válido");
+    if (val > USER_BALANCE) return alert("Saldo insuficiente");
+
+    USER_BALANCE -= val;
     
-    if (isNaN(valor) || valor <= 0) {
-        alert("Digite um valor válido.");
-        return;
-    }
-    if (valor > USER_BALANCE) {
-        alert("Saldo insuficiente!");
-        return;
-    }
-
-    // Deduzir saldo
-    USER_BALANCE -= valor;
-    atualizarDisplaySaldo();
-
-    // Salvar aposta
-    const bet = {
-        id: Date.now(), // ID único da aposta
-        date: new Date().toISOString(),
-        matchId: cart[0].matchId,
-        pick: cart[0].pick, // HOME, DRAW, AWAY
-        selectionName: cart[0].selectionName,
+    // Salva aposta
+    const aposta = {
+        data: new Date().toISOString(),
+        matchId: cart[0].id,
+        selection: cart[0].tipo, // HOME, DRAW, AWAY
         odd: cart[0].odd,
-        stake: valor,
-        potentialWin: valor * cart[0].odd,
-        status: 'OPEN' // OPEN, WON, LOST
+        valor: val,
+        retorno: val * cart[0].odd,
+        status: 'OPEN',
+        timeApostado: cart[0].nome
     };
-
-    myBets.unshift(bet); // Adiciona no topo
-    salvarDadosLocais();
     
+    myBets.unshift(aposta);
+    atualizarDisplaySaldo();
+    salvar();
     limparCarrinho();
-    document.getElementById('bet-amount').value = '';
-    alert("Aposta realizada com sucesso!");
+    alert("Aposta realizada!");
+    mostrarMinhasApostas();
 }
 
-// --- Verificação de Resultados (A Mágica) ---
-function verificarResultados(jogosFinalizados) {
-    let houveMudanca = false;
-
-    myBets.forEach(bet => {
-        if (bet.status === 'OPEN') {
-            // Procura o jogo correspondente nos resultados
-            const jogoReal = jogosFinalizados.find(j => j.id === bet.matchId);
-
-            if (jogoReal) {
-                // Determinar quem ganhou no jogo real
-                let resultadoReal = 'DRAW';
-                if (jogoReal.placar_casa > jogoReal.placar_fora) resultadoReal = 'HOME';
-                if (jogoReal.placar_fora > jogoReal.placar_casa) resultadoReal = 'AWAY';
-
-                // Conferir aposta
-                if (bet.pick === resultadoReal) {
-                    bet.status = 'WON';
-                    USER_BALANCE += bet.potentialWin;
-                    alert(`Green! Você ganhou R$ ${bet.potentialWin.toFixed(2)} na aposta em ${bet.selectionName}`);
-                } else {
-                    bet.status = 'LOST';
-                }
-                houveMudanca = true;
-            }
-        }
-    });
-
-    if (houveMudanca) {
-        atualizarDisplaySaldo();
-        salvarDadosLocais();
-    }
-}
-
-// --- Helpers e Persistência ---
+// --- Gestão de Dados ---
 function atualizarDisplaySaldo() {
-    document.getElementById('user-balance').innerText = `R$ ${USER_BALANCE.toFixed(2)}`;
-    localStorage.setItem('mejoBet_balance', USER_BALANCE.toFixed(2));
+    const el = document.getElementById('user-balance');
+    if(el) el.innerText = `R$ ${USER_BALANCE.toFixed(2)}`;
 }
 
-function salvarDadosLocais() {
+function salvar() {
+    localStorage.setItem('mejoBet_balance', USER_BALANCE.toFixed(2));
     localStorage.setItem('mejoBet_history', JSON.stringify(myBets));
 }
 
-function mostrarMinhasApostas() {
-    document.getElementById('games-container').classList.add('hidden');
-    document.getElementById('date-filters').classList.add('hidden');
-    document.getElementById('my-bets-view').classList.remove('hidden');
+// --- Funções de Navegação ---
+window.filtrarLiga = function() { location.reload(); }
+window.mostrarMinhasApostas = function() {
+    const container = document.getElementById('games-container');
+    container.innerHTML = '<h3 class="mb-4">Minhas Apostas</h3>';
     
-    const container = document.getElementById('bets-history-list');
-    container.innerHTML = '';
-
-    if (myBets.length === 0) {
-        container.innerHTML = '<p>Você ainda não fez nenhuma aposta.</p>';
+    if(myBets.length === 0) {
+        container.innerHTML += '<p>Sem histórico.</p>';
         return;
     }
 
     myBets.forEach(bet => {
-        let classeStatus = 'bet-open';
-        let textoStatus = 'Em Aberto';
-        
-        if(bet.status === 'WON') { classeStatus = 'bet-won'; textoStatus = 'Ganhou'; }
-        if(bet.status === 'LOST') { classeStatus = 'bet-lost'; textoStatus = 'Perdeu'; }
-
         const div = document.createElement('div');
-        div.className = `${classeStatus} text-sm rounded p-3 mb-2`;
+        div.className = 'bg-gray-800 p-3 mb-2 rounded border-l-4 ' + (bet.status === 'OPEN' ? 'border-gray-500' : (bet.status === 'WON' ? 'border-green-500' : 'border-red-500'));
         div.innerHTML = `
-            <div class="flex justify-between font-bold">
-                <span>${bet.selectionName} (${bet.pick})</span>
-                <span>R$ ${bet.stake.toFixed(2)}</span>
+            <div class="flex justify-between">
+                <span>${bet.timeApostado}</span>
+                <span class="font-bold">R$ ${bet.valor}</span>
             </div>
-            <div class="flex justify-between text-xs mt-1 text-gray-300">
-                <span>Odd: ${bet.odd}</span>
-                <span>Retorno: R$ ${bet.potentialWin.toFixed(2)}</span>
-            </div>
-            <div class="text-right text-xs mt-2 uppercase font-bold">${textoStatus}</div>
+            <div class="text-xs text-gray-400">Retorno possível: R$ ${bet.retorno.toFixed(2)} (${bet.status})</div>
         `;
         container.appendChild(div);
     });
 }
-
-function setupListeners() {
-    document.getElementById('bet-amount').addEventListener('input', calcularRetorno);
-    document.getElementById('place-bet-btn').addEventListener('click', realizarAposta);
-}
-
-// Filtro simples de navegação (Exemplo)
-window.filtrarLiga = function(liga) {
-    document.getElementById('games-container').classList.remove('hidden');
-    document.getElementById('my-bets-view').classList.add('hidden');
-    // Em um app real, filtraria o array allMatches e chamaria renderizarJogos novamente
-    // Por enquanto, apenas recarrega a view principal
-    location.reload(); 
-}
-window.mostrarMinhasApostas = mostrarMinhasApostas;
