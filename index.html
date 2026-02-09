@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MejoBet - Apostas Esportivas</title>
-    <!-- Tailwind CSS (Framework Visual) -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -12,43 +12,33 @@
             theme: {
                 extend: {
                     colors: {
-                        dark: {
-                            900: '#0f172a', // Fundo Principal
-                            800: '#1e293b', // Cartões
-                            700: '#334155', // Bordas
-                        },
-                        brand: {
-                            500: '#10b981', // Verde Principal
-                            600: '#059669', // Verde Hover
-                        }
+                        dark: { 900: '#0f172a', 800: '#1e293b', 700: '#334155' },
+                        brand: { 500: '#10b981', 600: '#059669' }
                     },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    }
+                    fontFamily: { sans: ['Inter', 'sans-serif'] }
                 }
             }
         }
     </script>
-    <!-- Font Awesome & Google Fonts -->
+    <!-- Font Awesome -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="bg-dark-900 text-gray-200 font-sans antialiased overflow-hidden h-screen flex flex-col">
 
-    <!-- Navbar Topo -->
-    <header class="h-16 bg-dark-800 border-b border-dark-700 flex items-center justify-between px-6 shrink-0 z-20 shadow-md">
+    <!-- Navbar -->
+    <header class="h-16 bg-dark-800 border-b border-dark-700 flex items-center justify-between px-4 md:px-6 shrink-0 z-20 shadow-md">
         <div class="flex items-center gap-3">
             <div class="w-8 h-8 bg-brand-500 rounded flex items-center justify-center text-dark-900 font-bold text-lg">M</div>
             <span class="text-xl font-bold tracking-tight text-white">MejoBet</span>
         </div>
-
-        <div class="flex items-center gap-6">
-            <div class="flex flex-col items-end mr-4">
-                <span class="text-xs text-gray-400">Saldo Disponível</span>
-                <span class="text-brand-500 font-bold text-lg" id="header-balance">R$ 0,00</span>
+        <div class="flex items-center gap-4">
+            <div class="flex flex-col items-end">
+                <span class="text-[10px] uppercase text-gray-400">Saldo</span>
+                <span class="text-brand-500 font-bold" id="header-balance">R$ 0,00</span>
             </div>
-            <div class="w-10 h-10 rounded-full bg-dark-700 flex items-center justify-center border border-dark-600 cursor-pointer hover:bg-dark-600 transition">
+            <div class="w-10 h-10 rounded-full bg-dark-700 flex items-center justify-center border border-dark-600">
                 <i class="fas fa-user text-gray-300"></i>
             </div>
         </div>
@@ -56,29 +46,28 @@
 
     <div class="flex flex-1 overflow-hidden">
         
-        <!-- Sidebar (Navegação Ligas) -->
+        <!-- Sidebar Esquerda -->
         <aside class="w-64 bg-dark-900 border-r border-dark-700 flex flex-col hidden md:flex">
             <div class="p-4">
-                <h3 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Principais Ligas</h3>
+                <h3 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Ligas</h3>
                 <nav class="space-y-1" id="league-menu">
-                    <button onclick="filtrar('TODOS')" class="nav-btn active w-full text-left px-3 py-2 rounded-md text-sm font-medium transition flex items-center gap-3">
-                        <i class="fas fa-globe w-5 text-center"></i> Todos os Jogos
+                    <button onclick="filtrar('TODOS')" class="nav-btn active w-full text-left px-3 py-2 rounded text-sm font-medium flex items-center gap-3 text-white bg-dark-800 transition">
+                        <i class="fas fa-globe w-5 text-center"></i> Todos
                     </button>
-                    <button onclick="filtrar('BSA')" class="nav-btn w-full text-left px-3 py-2 rounded-md text-sm font-medium transition flex items-center gap-3 text-gray-400 hover:text-white hover:bg-dark-800">
-                        <img src="https://crests.football-data.org/764.svg" class="w-5 h-5 object-contain"> Brasileirão
+                    <button onclick="filtrar('BSA')" class="nav-btn w-full text-left px-3 py-2 rounded text-sm font-medium flex items-center gap-3 text-gray-400 hover:text-white hover:bg-dark-800 transition">
+                        <i class="fas fa-futbol w-5 text-center text-yellow-500"></i> Brasileirão
                     </button>
-                    <button onclick="filtrar('PL')" class="nav-btn w-full text-left px-3 py-2 rounded-md text-sm font-medium transition flex items-center gap-3 text-gray-400 hover:text-white hover:bg-dark-800">
-                        <img src="https://crests.football-data.org/PL.png" class="w-5 h-5 object-contain"> Premier League
+                    <button onclick="filtrar('PL')" class="nav-btn w-full text-left px-3 py-2 rounded text-sm font-medium flex items-center gap-3 text-gray-400 hover:text-white hover:bg-dark-800 transition">
+                        <i class="fas fa-crown w-5 text-center text-purple-500"></i> Premier League
                     </button>
-                    <button onclick="filtrar('PD')" class="nav-btn w-full text-left px-3 py-2 rounded-md text-sm font-medium transition flex items-center gap-3 text-gray-400 hover:text-white hover:bg-dark-800">
-                        <img src="https://crests.football-data.org/PD.png" class="w-5 h-5 object-contain"> La Liga
+                    <button onclick="filtrar('PD')" class="nav-btn w-full text-left px-3 py-2 rounded text-sm font-medium flex items-center gap-3 text-gray-400 hover:text-white hover:bg-dark-800 transition">
+                        <i class="fas fa-flag w-5 text-center text-red-500"></i> La Liga
                     </button>
-                    <button onclick="filtrar('CL')" class="nav-btn w-full text-left px-3 py-2 rounded-md text-sm font-medium transition flex items-center gap-3 text-gray-400 hover:text-white hover:bg-dark-800">
-                        <img src="https://crests.football-data.org/CL.png" class="w-5 h-5 object-contain"> Champions
+                    <button onclick="filtrar('CL')" class="nav-btn w-full text-left px-3 py-2 rounded text-sm font-medium flex items-center gap-3 text-gray-400 hover:text-white hover:bg-dark-800 transition">
+                        <i class="fas fa-star w-5 text-center text-blue-500"></i> Champions
                     </button>
                 </nav>
             </div>
-
             <div class="mt-auto p-4 border-t border-dark-700">
                 <button onclick="alternarHistorico()" class="w-full bg-dark-800 hover:bg-dark-700 text-white py-2 rounded border border-dark-600 transition text-sm">
                     <i class="fas fa-history mr-2"></i> Minhas Apostas
@@ -86,92 +75,83 @@
             </div>
         </aside>
 
-        <!-- Área Principal (Feed de Jogos) -->
-        <main class="flex-1 overflow-y-auto p-6 relative" id="main-content">
-            
-            <!-- Banner Hero -->
-            <div class="bg-gradient-to-r from-emerald-900 to-dark-900 rounded-xl p-6 mb-8 border border-emerald-900/50 shadow-lg relative overflow-hidden">
+        <!-- Conteúdo Principal -->
+        <main class="flex-1 overflow-y-auto p-4 md:p-6 relative" id="main-content">
+            <!-- Banner -->
+            <div class="bg-gradient-to-r from-emerald-900 to-dark-800 rounded-xl p-6 mb-8 border border-emerald-900 relative overflow-hidden shadow-lg">
                 <div class="relative z-10">
-                    <h1 class="text-2xl font-bold text-white mb-2">Aposte nos melhores jogos</h1>
-                    <p class="text-emerald-100 max-w-lg text-sm">As melhores odds do mercado simulado estão aqui. Acompanhe resultados em tempo real e gerencie sua banca.</p>
+                    <h1 class="text-2xl font-bold text-white mb-1">Apostas ao Vivo</h1>
+                    <p class="text-emerald-100 text-sm opacity-80">Odds atualizadas em tempo real.</p>
                 </div>
-                <i class="fas fa-futbol absolute -right-10 -bottom-10 text-9xl text-emerald-800/20"></i>
+                <i class="fas fa-chart-line absolute -right-5 -bottom-5 text-8xl text-white/5"></i>
             </div>
 
-            <!-- Filtros e Status -->
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-lg font-bold text-white flex items-center gap-2">
-                    <span class="w-1 h-6 bg-brand-500 rounded-full"></span>
-                    <span id="titulo-secao">Próximos Jogos</span>
+                    <span class="w-1 h-5 bg-brand-500 rounded-full"></span>
+                    <span id="titulo-secao">Jogos Disponíveis</span>
                 </h2>
-                <div class="text-xs text-gray-500" id="last-update">Atualizando...</div>
+                <div class="text-xs text-gray-500" id="last-update">...</div>
             </div>
 
-            <!-- Lista de Jogos -->
+            <!-- ID CORRIGIDO: games-feed -->
             <div id="games-feed" class="space-y-4 pb-20">
-                <!-- Skeleton Loader (Visual de carregamento) -->
-                <div class="animate-pulse space-y-3">
-                    <div class="h-24 bg-dark-800 rounded-lg"></div>
-                    <div class="h-24 bg-dark-800 rounded-lg"></div>
-                    <div class="h-24 bg-dark-800 rounded-lg"></div>
-                </div>
+                <div class="text-center text-gray-500 py-10 animate-pulse">Carregando odds...</div>
             </div>
 
-            <!-- Modal Histórico (Escondido por padrão) -->
-            <div id="history-view" class="hidden absolute inset-0 bg-dark-900 z-30 p-6 overflow-y-auto">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl font-bold">Histórico de Apostas</h2>
-                    <button onclick="alternarHistorico()" class="text-gray-400 hover:text-white"><i class="fas fa-times text-xl"></i></button>
+            <!-- Modal Histórico -->
+            <div id="history-view" class="hidden absolute inset-0 bg-dark-900 z-30 p-6 overflow-y-auto fade-in-up">
+                <div class="max-w-2xl mx-auto">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-bold text-white">Minhas Apostas</h2>
+                        <button onclick="alternarHistorico()" class="text-gray-400 hover:text-white"><i class="fas fa-times text-xl"></i></button>
+                    </div>
+                    <div id="history-list" class="space-y-3"></div>
                 </div>
-                <div id="history-list" class="space-y-3"></div>
             </div>
-
         </main>
 
         <!-- Sidebar Direita (Boletim) -->
         <aside class="w-80 bg-dark-800 border-l border-dark-700 flex flex-col shadow-xl z-20 absolute right-0 top-0 h-full md:relative transform transition-transform duration-300 translate-x-full md:translate-x-0" id="betslip-sidebar">
             <div class="p-4 bg-dark-900 border-b border-dark-700 flex justify-between items-center">
-                <h3 class="font-bold text-white">Boletim de Aposta</h3>
+                <h3 class="font-bold text-white">Boletim</h3>
                 <span class="bg-brand-500 text-dark-900 text-xs font-bold px-2 py-0.5 rounded-full" id="slip-count">0</span>
             </div>
 
+            <!-- Lista de Apostas no Carrinho -->
             <div class="flex-1 overflow-y-auto p-4 space-y-3" id="slip-items">
-                <div class="text-center text-gray-500 mt-10 text-sm">
-                    <i class="fas fa-ticket-alt text-4xl mb-3 opacity-20"></i>
-                    <p>Selecione uma cotação para começar.</p>
+                <div class="text-center text-gray-500 mt-10 text-sm opacity-50">
+                    <i class="fas fa-ticket-alt text-4xl mb-3"></i>
+                    <p>Boletim vazio</p>
                 </div>
             </div>
 
             <div class="p-4 bg-dark-900 border-t border-dark-700">
                 <div class="flex justify-between text-sm text-gray-400 mb-2">
-                    <span>Cotação Total:</span>
+                    <span>Odd Total:</span>
                     <span class="text-white font-bold" id="total-odds">1.00</span>
                 </div>
-                
                 <div class="relative mb-3">
                     <span class="absolute left-3 top-2.5 text-gray-500 text-sm">R$</span>
-                    <input type="number" id="bet-input" class="w-full bg-dark-800 border border-dark-600 text-white rounded p-2 pl-8 focus:outline-none focus:border-brand-500 transition" placeholder="Valor">
+                    <input type="number" id="bet-input" class="w-full bg-dark-800 border border-dark-600 text-white rounded p-2 pl-8 focus:border-brand-500 focus:outline-none transition" placeholder="Valor">
                 </div>
-
                 <div class="flex justify-between text-sm mb-4">
-                    <span class="text-gray-400">Retorno Potencial:</span>
+                    <span class="text-gray-400">Retorno:</span>
                     <span class="text-brand-500 font-bold" id="potential-return">R$ 0,00</span>
                 </div>
-
-                <button id="btn-apostar" class="w-full bg-brand-500 hover:bg-brand-600 text-dark-900 font-bold py-3 rounded shadow-lg shadow-brand-500/20 transition disabled:opacity-50 disabled:cursor-not-allowed" disabled>
-                    FAZER APOSTA
+                <button id="btn-apostar" class="w-full bg-brand-500 hover:bg-brand-600 text-dark-900 font-bold py-3 rounded shadow transition disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                    APOSTAR
                 </button>
             </div>
             
-            <!-- Mobile Toggle para fechar -->
-            <button class="md:hidden absolute top-4 right-4 text-gray-400" onclick="toggleMobileSlip()">
+            <button class="md:hidden absolute top-2 right-2 text-gray-400 p-2" onclick="toggleMobileSlip()">
                 <i class="fas fa-times"></i>
             </button>
         </aside>
     </div>
 
-    <!-- Botão Flutuante Mobile (Só aparece em telas pequenas) -->
-    <button class="md:hidden fixed bottom-4 right-4 bg-brand-500 text-dark-900 w-14 h-14 rounded-full shadow-2xl flex items-center justify-center z-50 animate-bounce" onclick="toggleMobileSlip()">
+    <!-- Botão Mobile -->
+    <button class="md:hidden fixed bottom-6 right-6 bg-brand-500 text-dark-900 w-14 h-14 rounded-full shadow-2xl flex items-center justify-center z-50 hover:scale-110 transition" onclick="toggleMobileSlip()">
         <i class="fas fa-receipt text-xl"></i>
     </button>
 
