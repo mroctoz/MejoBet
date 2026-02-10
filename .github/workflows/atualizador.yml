@@ -1,22 +1,30 @@
-name: Atualizar Resultados e Odds
+name: Sistema de Apostas (Odds & Live Score)
 
 on:
   schedule:
-    # 0 */6 * * * significa: Rodar no minuto 0 a cada 6 horas
-    # Horários UTC: 00:00, 06:00, 12:00, 18:00
-    # (No Brasil será: 21:00, 03:00, 09:00, 15:00 aprox.)
-    - cron: '0 */6 * * *' 
-  workflow_dispatch: # Permite rodar manualmente no botão "Run workflow"
+    # 1. ATUALIZAÇÃO DE ODDS (PESADO)
+    # Roda a cada 12 horas (00:00 e 12:00 UTC)
+    # Isso economiza sua API de Odds paga
+    - cron: '0 0,12 * * *'
+
+    # 2. ATUALIZAÇÃO DE PLACAR (LEVE)
+    # Roda a cada 20 minutos
+    # Isso dá a sensação de tempo real usando a API Grátis
+    - cron: '*/20 * * * *'
+
+  workflow_dispatch: # Botão manual
 
 jobs:
-  build:
+  update-data:
     runs-on: ubuntu-latest
     permissions:
-      contents: write # Permissão para salvar o arquivo json
+      contents: write
 
     steps:
       - name: Checkout do código
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Configurar Python
         uses: actions/setup-python@v4
@@ -26,15 +34,38 @@ jobs:
       - name: Instalar dependências
         run: pip install requests
 
-      - name: Rodar script de coleta
+      - name: Decidir qual script rodar
+        id: decision
+        run: |
+          # Se foi acionado manualmente ou é hora cheia (00 ou 12), roda o completo
+          # A variável github.event_name diz se foi cron ou manual
+          MINUTE=$(date +'%M')
+          HOUR=$(date +'%H')
+          
+          # Lógica: Se for manual, roda o completo.
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            echo "script_to_run=script_coleta.py" >> $GITHUB_ENV
+            echo "Rodando manual: Completo"
+          
+          # Se o minuto for 0 e hora par (aproximação do cron pesado), roda completo
+          elif [ "$MINUTE" == "00" ] && [ $((HOUR % 12)) -eq 0 ]; then
+             echo "script_to_run=script_coleta.py" >> $GITHUB_ENV
+             echo "Horário agendado pesado."
+          
+          # Caso contrário, roda só o placar (rápido)
+          else
+             echo "script_to_run=script_live_score.py" >> $GITHUB_ENV
+             echo "Atualização rápida de placar."
+          fi
+
+      - name: Executar Script Definido
         env: 
-          # Aqui ele pega as duas chaves que você salvou nos Secrets
           API_TOKEN: ${{ secrets.API_TOKEN }} 
           ODD_TOKEN: ${{ secrets.ODD_TOKEN }}
-        run: python script_coleta.py
+        run: python ${{ env.script_to_run }}
 
-      - name: Commitar e Push
+      - name: Commitar mudanças
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "Atualizando odds e resultados: robot"
+          commit_message: "Update: ${{ env.script_to_run }}"
           file_pattern: "dados_futebol.json"
