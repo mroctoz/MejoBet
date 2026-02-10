@@ -4,170 +4,199 @@ const STATE = {
     cart: [],
     games: [],
     filter: 'TODOS',
-    betsHistory: []
+    bets: []
 };
 
-const API_URL = 'dados_futebol.json';
+const API = 'dados_futebol.json';
 
-// Inicialização
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("Iniciando MejoBet V2..."); // Debug para confirmar que é o novo script
-    loadUserData();
-    fetchData();
-    setupListeners();
+    loadData();
+    // Atualiza a cada 60s
+    setInterval(fetchGames, 60000);
 });
 
-// --- Busca de Dados ---
-async function fetchData() {
+function loadData() {
+    const bal = localStorage.getItem('mb_balance');
+    if(bal) STATE.balance = parseFloat(bal);
+    
+    const hist = localStorage.getItem('mb_history');
+    if(hist) STATE.bets = JSON.parse(hist);
+
+    updateUI();
+    fetchGames();
+}
+
+async function fetchGames() {
     try {
-        // Usa timestamp para evitar cache
-        const res = await fetch(API_URL + '?t=' + Date.now());
-        if (!res.ok) throw new Error("JSON não encontrado.");
+        const res = await fetch(API + '?t=' + Date.now());
+        if(!res.ok) throw new Error("Erro na API");
         
         const data = await res.json();
-        
-        // Junta próximos e resultados em uma lista só
         STATE.games = [...(data.proximos || []), ...(data.resultados || [])];
         
-        // Verifica se ganhou alguma aposta
-        checkBetsResult(data.resultados || []);
-        
-        renderFeed();
-        document.getElementById('last-update').innerText = 'Atualizado: ' + new Date().toLocaleTimeString();
-
+        checkResults(data.resultados || []);
+        render();
+        document.getElementById('loading-indicator').style.display = 'none';
     } catch (e) {
-        console.error("Erro fetch:", e);
-        const el = document.getElementById('games-feed');
-        if(el) el.innerHTML = `<div class="text-center text-red-400 mt-10 border border-red-900 p-4 rounded bg-red-900/10">
-            <p>Erro ao carregar dados.</p>
-            <small class="text-xs opacity-70">O robô do GitHub ainda não gerou o arquivo JSON ou há um erro de conexão.</small>
-        </div>`;
+        console.error(e);
     }
 }
 
-// --- Renderização dos Jogos ---
-function renderFeed() {
-    const container = document.getElementById('games-feed');
-    if (!container) return; // Proteção contra erro de null
+// --- Renderização ---
+function render() {
+    const feed = document.getElementById('games-feed');
+    feed.innerHTML = '';
 
-    container.innerHTML = '';
-
-    // Filtros
-    let filtered = STATE.games.filter(g => {
-        // Ignora jogos muito velhos (mais de 3 dias atrás)
-        const isOld = new Date(g.data) < new Date(Date.now() - 259200000);
-        if(isOld) return false;
-
+    // Filtros de tempo e liga
+    const filtered = STATE.games.filter(g => {
+        // Remove jogos com mais de 24h passadas
+        if (new Date(g.data) < new Date(Date.now() - 86400000)) return false;
+        
         if (STATE.filter === 'TODOS') return true;
-        // O código da liga pode vir da API ou ser inferido
-        const codigoLiga = g.liga_code || inferirCodigoLiga(g.liga);
-        return codigoLiga === STATE.filter;
+        
+        // Match seguro do código da liga
+        const code = g.liga_code || inferLeague(g.liga);
+        return code === STATE.filter;
     });
 
-    if (filtered.length === 0) {
-        container.innerHTML = `<div class="text-center text-gray-500 py-10">Nenhum jogo encontrado para este filtro.</div>`;
+    if(filtered.length === 0) {
+        feed.innerHTML = '<div class="text-center text-gray-500 py-10">Nenhum jogo encontrado.</div>';
         return;
     }
 
     // Agrupar por data
-    const grouped = {};
+    const groups = {};
     filtered.forEach(g => {
-        const dateKey = g.data.split('T')[0];
-        if (!grouped[dateKey]) grouped[dateKey] = [];
-        grouped[dateKey].push(g);
+        const d = g.data.split('T')[0];
+        if(!groups[d]) groups[d] = [];
+        groups[d].push(g);
     });
 
-    // Ordenar datas
-    Object.keys(grouped).sort().forEach(date => {
-        const dObj = new Date(date + 'T12:00:00');
-        const dateStr = dObj.toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' });
+    Object.keys(groups).sort().forEach(date => {
+        const dateObj = new Date(date + 'T12:00:00');
+        const dateStr = dateObj.toLocaleDateString('pt-BR', {weekday: 'long', day:'numeric', month:'long'});
         
-        // Criação do HTML da Data
+        // Cabeçalho da Data
         const section = document.createElement('div');
-        section.className = 'mb-6';
-        section.innerHTML = `<h3 class="text-xs font-bold text-gray-500 uppercase mb-3 border-b border-dark-700 pb-1">${dateStr}</h3>`;
+        section.innerHTML = `
+            <div class="flex items-center gap-2 mb-3 mt-6">
+                <div class="h-px bg-dark-700 flex-1"></div>
+                <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">${dateStr}</span>
+                <div class="h-px bg-dark-700 flex-1"></div>
+            </div>`;
         
-        // Lista de jogos daquela data
-        const listDiv = document.createElement('div');
-        listDiv.className = 'space-y-3';
-        
-        grouped[date].forEach(game => {
+        const list = document.createElement('div');
+        list.className = 'space-y-3';
+
+        groups[date].forEach(game => {
+            const gameTime = new Date(game.data);
+            const now = new Date();
+            const hasStarted = now >= gameTime;
             const isFinished = game.status === 'FINISHED';
-            // Garante que odds existam, senão usa padrão
+            
+            // Odds fallback seguro
             const odds = game.odds || { home: 1.01, draw: 1.01, away: 1.01 };
-            
-            // Se odd for inválida (1.01 ou menor), bloqueia aposta
-            const oddsInvalidas = odds.home <= 1.01;
-            const podeApostar = !isFinished && !oddsInvalidas;
+            const canBet = !hasStarted && !isFinished && odds.home > 1.01;
 
-            // Gera cores para fallback de imagem
-            const corCasa = stringToColor(game.time_casa);
-            const corFora = stringToColor(game.time_fora);
+            // Cores
+            const cHome = stringToColor(game.time_casa);
+            const cAway = stringToColor(game.time_fora);
 
-            // HTML do Card
+            // Tratamento de nomes para evitar aspas quebrando HTML
+            const nameHome = escapeHtml(game.time_casa);
+            const nameAway = escapeHtml(game.time_fora);
+
             const card = document.createElement('div');
-            card.className = `bg-dark-800 rounded-lg p-3 md:p-4 border border-dark-700 hover:border-dark-600 transition flex flex-col md:flex-row items-center gap-4 relative`;
+            card.className = 'bg-dark-800 rounded-lg p-4 border border-dark-700 hover:border-dark-600 transition shadow-sm';
             
+            // Layout Grid: [Liga/Status] [Times] [Botões]
+            // Badge Status
+            let statusHTML = `<span class="text-xs font-mono text-gray-400 flex items-center gap-1"><i class="far fa-clock"></i> ${gameTime.toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'})}</span>`;
+            
+            if (isFinished) {
+                statusHTML = `<span class="text-[10px] font-bold text-gray-400 bg-dark-900 px-2 py-0.5 rounded border border-dark-700">FIM: ${game.placar_casa}-${game.placar_fora}</span>`;
+            } else if (hasStarted) {
+                statusHTML = `<span class="text-[10px] font-bold text-red-500 animate-pulse">AO VIVO</span>`;
+            }
+
+            // --- HTML DO CARD ---
+            // Usamos grid-cols-3 para alinhar perfeitamente Home - VS - Away
             card.innerHTML = `
-                <!-- Info Times -->
-                <div class="flex-1 w-full md:w-auto flex items-center justify-between md:justify-start gap-4">
-                    <div class="flex flex-col gap-2 w-full">
-                        <div class="flex items-center gap-3">
-                            ${gerarLogo(game.brasao_casa, game.time_casa, corCasa)}
-                            <span class="text-sm font-semibold text-white truncate">${game.time_casa}</span>
-                            ${isFinished ? `<span class="ml-auto font-bold text-lg">${game.placar_casa}</span>` : ''}
-                        </div>
-                        <div class="flex items-center gap-3">
-                            ${gerarLogo(game.brasao_fora, game.time_fora, corFora)}
-                            <span class="text-sm font-semibold text-white truncate">${game.time_fora}</span>
-                            ${isFinished ? `<span class="ml-auto font-bold text-lg">${game.placar_fora}</span>` : ''}
-                        </div>
+                <div class="flex justify-between items-center mb-4 border-b border-dark-700 pb-2">
+                    <span class="text-[10px] font-bold text-brand-600 uppercase tracking-wider">${game.liga_code || 'INT'}</span>
+                    ${statusHTML}
+                </div>
+
+                <div class="grid grid-cols-[1fr_auto_1fr] items-center gap-2 mb-4">
+                    <!-- Home -->
+                    <div class="flex items-center gap-3 overflow-hidden">
+                        ${renderImg(game.brasao_casa, nameHome, cHome)}
+                        <span class="text-sm font-semibold text-white truncate">${nameHome}</span>
+                    </div>
+
+                    <!-- VS -->
+                    <div class="text-[10px] text-dark-600 font-bold px-2">VS</div>
+
+                    <!-- Away -->
+                    <div class="flex items-center gap-3 overflow-hidden justify-end">
+                        <span class="text-sm font-semibold text-white truncate text-right">${nameAway}</span>
+                        ${renderImg(game.brasao_fora, nameAway, cAway)}
                     </div>
                 </div>
 
-                <!-- Botões de Odds -->
-                <div class="flex gap-2 w-full md:w-auto mt-2 md:mt-0">
-                    ${podeApostar ? `
-                        <button onclick="addToSlip('${game.id}', 'HOME', ${odds.home}, '${game.time_casa}')" 
-                            class="flex-1 md:w-20 bg-dark-900 rounded p-2 flex flex-col items-center justify-center border border-dark-700 hover:border-brand-500 hover:text-brand-500 transition group">
-                            <span class="text-[10px] text-gray-500 group-hover:text-brand-500">1</span>
-                            <span class="font-bold text-sm">${odds.home.toFixed(2)}</span>
-                        </button>
-                        <button onclick="addToSlip('${game.id}', 'DRAW', ${odds.draw}, 'Empate')" 
-                            class="flex-1 md:w-20 bg-dark-900 rounded p-2 flex flex-col items-center justify-center border border-dark-700 hover:border-brand-500 hover:text-brand-500 transition group">
-                            <span class="text-[10px] text-gray-500 group-hover:text-brand-500">X</span>
-                            <span class="font-bold text-sm">${odds.draw.toFixed(2)}</span>
-                        </button>
-                        <button onclick="addToSlip('${game.id}', 'AWAY', ${odds.away}, '${game.time_fora}')" 
-                            class="flex-1 md:w-20 bg-dark-900 rounded p-2 flex flex-col items-center justify-center border border-dark-700 hover:border-brand-500 hover:text-brand-500 transition group">
-                            <span class="text-[10px] text-gray-500 group-hover:text-brand-500">2</span>
-                            <span class="font-bold text-sm">${odds.away.toFixed(2)}</span>
-                        </button>
-                    ` : `
-                        <div class="flex items-center justify-center w-full md:w-auto px-4 py-2 bg-dark-900 rounded text-xs text-gray-500">
-                            ${isFinished ? 'ENCERRADO' : 'SEM ODDS'}
-                        </div>
-                    `}
+                <!-- Botões -->
+                <div class="grid grid-cols-3 gap-2">
+                    ${renderBtn(game.id, 'HOME', odds.home, nameHome, canBet, '1')}
+                    ${renderBtn(game.id, 'DRAW', odds.draw, 'Empate', canBet, 'X')}
+                    ${renderBtn(game.id, 'AWAY', odds.away, nameAway, canBet, '2')}
                 </div>
             `;
-            listDiv.appendChild(card);
+            list.appendChild(card);
         });
 
-        section.appendChild(listDiv);
-        container.appendChild(section);
+        section.appendChild(list);
+        feed.appendChild(section);
     });
 }
 
-// --- Funções Auxiliares de Visual ---
-function gerarLogo(url, nome, cor) {
-    if (url && url.length > 5) {
-        return `<img src="${url}" class="w-6 h-6 object-contain" onerror="this.onerror=null;this.parentNode.innerHTML='${gerarPlaceholder(nome, cor)}'">`;
-    }
-    return gerarPlaceholder(nome, cor);
+// --- Helpers de HTML Seguro ---
+function escapeHtml(text) {
+    if (!text) return text;
+    return text.replace(/["']/g, ""); // Remove aspas para não quebrar atributos
 }
 
-function gerarPlaceholder(nome, cor) {
-    return `<div class="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold text-white shadow-sm" style="background-color: ${cor}">${nome.substring(0,2).toUpperCase()}</div>`;
+function renderImg(url, name, color) {
+    // Atenção: Aqui chamamos a função global imgError definida no HTML
+    // Usamos aspas simples nos atributos para evitar conflito
+    if (url && url.length > 5) {
+        return `<img src="${url}" class="team-logo" onerror="imgError(this, '${name}', '${color}')" alt="${name}">`;
+    }
+    return `<div class="avatar-fallback" style="background:${color}">${name.substring(0,2).toUpperCase()}</div>`;
+}
+
+function renderBtn(id, pick, odd, name, enabled, label) {
+    if (!enabled) {
+        return `
+            <div class="bg-dark-900 rounded py-2 flex flex-col items-center justify-center border border-dark-700 opacity-50 cursor-not-allowed">
+                <span class="text-[10px] text-gray-500">${label}</span>
+                <span class="text-gray-600 font-bold text-xs">--</span>
+            </div>`;
+    }
+    return `
+        <button onclick="addBet('${id}', '${pick}', ${odd}, '${name}')" 
+            class="bg-dark-700 hover:bg-dark-600 hover:border-brand-500 border border-transparent rounded py-2 flex flex-col items-center justify-center transition group">
+            <span class="text-[10px] text-gray-500 group-hover:text-brand-500 transition-colors">${label}</span>
+            <span class="text-brand-500 font-bold text-sm group-hover:text-white transition-colors">${odd.toFixed(2)}</span>
+        </button>`;
+}
+
+function inferLeague(name) {
+    if(!name) return 'INT';
+    const n = name.toUpperCase();
+    if(n.includes('BRASIL')) return 'BSA';
+    if(n.includes('PREMIER')) return 'PL';
+    if(n.includes('CHAMPIONS')) return 'CL';
+    return 'INT';
 }
 
 function stringToColor(str) {
@@ -177,121 +206,126 @@ function stringToColor(str) {
     return '#' + '00000'.substring(0, 6 - c.length) + c;
 }
 
-function inferirCodigoLiga(nomeLiga) {
-    if(!nomeLiga) return 'OUTROS';
-    const n = nomeLiga.toUpperCase();
-    if(n.includes('BRASIL') || n.includes('BRAZIL')) return 'BSA';
-    if(n.includes('PREMIER')) return 'PL';
-    if(n.includes('LIGA') && n.includes('SPAIN')) return 'PD';
-    if(n.includes('CHAMPIONS')) return 'CL';
-    return 'OUTROS';
+// --- Lógica de Apostas ---
+function addBet(id, pick, odd, name) {
+    STATE.cart = [{id, pick, odd, name}];
+    updateSlip();
+    // No mobile, abre o painel
+    document.getElementById('betslip-panel').classList.remove('translate-y-full');
 }
 
-// --- Carrinho e Apostas ---
-function addToSlip(id, pick, odd, name) {
-    STATE.cart = [{ id, pick, odd, name }];
-    renderSlip();
-    openMobileSlip();
-}
-
-function renderSlip() {
+function updateSlip() {
     const container = document.getElementById('slip-items');
-    const btn = document.getElementById('btn-apostar');
+    const btn = document.getElementById('btn-place-bet');
     
     if (STATE.cart.length === 0) {
-        container.innerHTML = `<div class="text-center text-gray-500 mt-10 text-sm opacity-50"><i class="fas fa-ticket-alt text-4xl mb-3"></i><p>Boletim vazio</p></div>`;
-        document.getElementById('total-odds').innerText = '1.00';
-        document.getElementById('slip-count').innerText = '0';
+        container.innerHTML = `
+            <div class="flex flex-col items-center justify-center h-full text-gray-600 opacity-50">
+                <i class="fas fa-ticket-alt text-4xl mb-2"></i>
+                <p class="text-xs">Selecione uma cotação</p>
+            </div>`;
         btn.disabled = true;
+        document.getElementById('slip-total-odds').innerText = '1.00';
+        document.getElementById('slip-badge').innerText = '0';
         return;
     }
 
     const item = STATE.cart[0];
     container.innerHTML = `
-        <div class="bg-dark-700 rounded p-3 relative border-l-4 border-brand-500 shadow-md">
-            <button onclick="clearSlip()" class="absolute top-2 right-2 text-gray-400 hover:text-red-500"><i class="fas fa-times"></i></button>
-            <div class="text-sm font-bold text-white mb-1 pr-6 truncate">${item.name}</div>
-            <div class="text-xs text-gray-400 mb-2">Vencedor do Encontro</div>
-            <span class="text-brand-500 font-bold bg-dark-900 px-2 py-1 rounded text-xs">@ ${item.odd.toFixed(2)}</span>
+        <div class="bg-dark-700 p-3 rounded border-l-2 border-brand-500 relative animate-fade-in-up">
+            <div class="flex justify-between items-start mb-1">
+                <span class="text-xs text-brand-500 font-bold uppercase">Vencedor</span>
+                <button onclick="clearSlip()" class="text-dark-600 hover:text-red-500"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="font-bold text-white text-sm mb-2">${item.name}</div>
+            <div class="flex justify-between items-center bg-dark-900 p-2 rounded">
+                <span class="text-xs text-gray-400">Odd</span>
+                <span class="text-brand-500 font-bold">${item.odd.toFixed(2)}</span>
+            </div>
         </div>
     `;
 
-    document.getElementById('total-odds').innerText = item.odd.toFixed(2);
-    document.getElementById('slip-count').innerText = '1';
+    document.getElementById('slip-total-odds').innerText = item.odd.toFixed(2);
+    document.getElementById('slip-badge').innerText = '1';
     btn.disabled = false;
-    calculateReturn();
+    calcReturn();
 }
 
-function calculateReturn() {
-    const input = document.getElementById('bet-input');
+function calcReturn() {
+    const input = document.getElementById('bet-amount');
     const val = parseFloat(input.value);
-    const odd = STATE.cart[0] ? STATE.cart[0].odd : 1;
+    const odd = STATE.cart[0] ? STATE.cart[0].odd : 1.00;
+    
     const pot = (val && val > 0) ? (val * odd).toFixed(2) : '0.00';
-    document.getElementById('potential-return').innerText = `R$ ${pot}`;
+    document.getElementById('slip-return').innerText = `R$ ${pot}`;
 }
 
 function placeBet() {
-    const input = document.getElementById('bet-input');
+    const input = document.getElementById('bet-amount');
     const val = parseFloat(input.value);
     
-    if (!val || val <= 0) return alert("Valor inválido");
+    if (!val || val <= 0) return alert("Digite um valor válido");
     if (val > STATE.balance) return alert("Saldo insuficiente");
 
     STATE.balance -= val;
     
     const bet = {
-        id: Date.now(),
-        matchId: STATE.cart[0].id,
-        pick: STATE.cart[0].pick,
-        name: STATE.cart[0].name,
-        odd: STATE.cart[0].odd,
+        ...STATE.cart[0],
         stake: val,
-        potentialWin: val * STATE.cart[0].odd,
+        potential: val * STATE.cart[0].odd,
         status: 'OPEN',
         date: new Date().toISOString()
     };
 
-    STATE.betsHistory.unshift(bet);
-    saveUserData();
+    STATE.bets.unshift(bet);
+    saveData();
     clearSlip();
-    alert("✅ Aposta realizada!");
-    updateHeaderBalance();
+    alert("Aposta realizada com sucesso!");
+    toggleMobileSlip();
 }
 
-// --- Helpers de Estado ---
-function loadUserData() {
-    const bal = localStorage.getItem('mejoBet_balance_v2');
-    if (bal) STATE.balance = parseFloat(bal);
-    const hist = localStorage.getItem('mejoBet_history_v2');
-    if (hist) STATE.betsHistory = JSON.parse(hist);
-    updateHeaderBalance();
+// --- Utils de UI ---
+function clearSlip() { STATE.cart = []; updateSlip(); document.getElementById('bet-amount').value = ''; }
+function toggleMobileSlip() { document.getElementById('betslip-panel').classList.toggle('translate-y-full'); }
+function toggleHistory() { 
+    const el = document.getElementById('history-modal');
+    el.classList.toggle('hidden');
+    if(!el.classList.contains('hidden')) renderHistory();
+}
+function filtrar(code) { 
+    STATE.filter = code; 
+    render();
+    document.querySelectorAll('.nav-btn').forEach(b => {
+        b.classList.remove('active', 'bg-dark-700', 'text-white');
+        b.classList.add('text-gray-400');
+        if(b.getAttribute('onclick').includes(code)) {
+            b.classList.add('active', 'bg-dark-700', 'text-white');
+            b.classList.remove('text-gray-400');
+        }
+    });
+}
+function saveData() {
+    localStorage.setItem('mb_balance', STATE.balance.toFixed(2));
+    localStorage.setItem('mb_history', JSON.stringify(STATE.bets));
+    updateUI();
+}
+function updateUI() {
+    document.getElementById('header-balance').innerText = `R$ ${STATE.balance.toFixed(2)}`;
 }
 
-function saveUserData() {
-    localStorage.setItem('mejoBet_balance_v2', STATE.balance.toFixed(2));
-    localStorage.setItem('mejoBet_history_v2', JSON.stringify(STATE.betsHistory));
-    updateHeaderBalance();
-}
-
-function updateHeaderBalance() {
-    const el = document.getElementById('header-balance');
-    if(el) el.innerText = `R$ ${STATE.balance.toFixed(2)}`;
-}
-
-// --- Verificação de Resultados ---
-function checkBetsResult(results) {
+function checkResults(results) {
     let changed = false;
-    STATE.betsHistory.forEach(bet => {
-        if (bet.status === 'OPEN') {
-            const game = results.find(r => String(r.id) === String(bet.matchId));
-            if (game) {
-                let result = 'DRAW';
-                if (game.placar_casa > game.placar_fora) result = 'HOME';
-                if (game.placar_fora > game.placar_casa) result = 'AWAY';
+    STATE.bets.forEach(bet => {
+        if(bet.status === 'OPEN') {
+            const game = results.find(r => String(r.id) === String(bet.id));
+            if(game) {
+                let res = 'DRAW';
+                if(game.placar_casa > game.placar_fora) res = 'HOME';
+                if(game.placar_fora > game.placar_casa) res = 'AWAY';
 
-                if (bet.pick === result) {
+                if(bet.pick === res) {
                     bet.status = 'WON';
-                    STATE.balance += bet.potentialWin;
+                    STATE.balance += bet.potential;
                 } else {
                     bet.status = 'LOST';
                 }
@@ -299,58 +333,40 @@ function checkBetsResult(results) {
             }
         }
     });
-    if (changed) {
-        saveUserData();
-        alert("🔔 Resultados atualizados! Verifique seu histórico.");
-    }
-}
-
-// --- UI Actions ---
-function clearSlip() { STATE.cart = []; renderSlip(); document.getElementById('bet-input').value = ''; }
-function toggleMobileSlip() { document.getElementById('betslip-sidebar').classList.toggle('translate-x-full'); }
-function openMobileSlip() { document.getElementById('betslip-sidebar').classList.remove('translate-x-full'); }
-function alternarHistorico() { 
-    document.getElementById('history-view').classList.toggle('hidden'); 
-    renderHistory();
+    if(changed) { saveData(); alert("Suas apostas foram atualizadas!"); }
 }
 
 function renderHistory() {
     const list = document.getElementById('history-list');
     list.innerHTML = '';
-    STATE.betsHistory.forEach(bet => {
-        let color = bet.status === 'WON' ? 'border-green-500' : (bet.status === 'LOST' ? 'border-red-500' : 'border-gray-500');
-        let textStatus = bet.status === 'WON' ? 'GANHOU' : (bet.status === 'LOST' ? 'PERDEU' : 'ABERTO');
-        let textClass = bet.status === 'WON' ? 'text-green-400' : (bet.status === 'LOST' ? 'text-red-400' : 'text-gray-400');
-        
+    
+    if(STATE.bets.length === 0) {
+        list.innerHTML = '<p class="text-center text-gray-500 text-sm">Sem histórico.</p>';
+        return;
+    }
+
+    STATE.bets.forEach(b => {
+        let color = b.status === 'WON' ? 'text-brand-500' : (b.status === 'LOST' ? 'text-red-500' : 'text-gray-400');
+        let border = b.status === 'WON' ? 'border-brand-500' : (b.status === 'LOST' ? 'border-red-500' : 'border-dark-600');
+        let label = b.status === 'WON' ? 'GANHOU' : (b.status === 'LOST' ? 'PERDEU' : 'ABERTO');
+
         list.innerHTML += `
-            <div class="bg-dark-800 p-3 rounded border-l-4 ${color} mb-2">
-                <div class="flex justify-between font-bold text-white">
-                    <span>${bet.name}</span>
-                    <span>R$ ${bet.stake.toFixed(2)}</span>
+            <div class="bg-dark-900 p-3 rounded border-l-2 ${border}">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-white font-bold text-sm truncate pr-2">${b.name}</span>
+                    <span class="text-xs font-mono text-gray-400">${new Date(b.date).toLocaleDateString('pt-BR')}</span>
                 </div>
-                <div class="flex justify-between text-xs text-gray-400 mt-1">
-                    <span>Odd: ${bet.odd} (${bet.pick})</span>
-                    <span class="${textClass} font-bold">${textStatus}</span>
+                <div class="flex justify-between items-end">
+                    <div class="flex flex-col text-xs text-gray-400">
+                        <span>Aposta: R$ ${b.stake}</span>
+                        <span>Odd: ${b.odd} (${b.pick})</span>
+                    </div>
+                    <span class="text-xs font-bold ${color}">${label}</span>
                 </div>
             </div>
         `;
     });
 }
 
-function filtrar(code) {
-    STATE.filter = code;
-    document.querySelectorAll('.nav-btn').forEach(b => {
-        b.classList.remove('active', 'bg-dark-800', 'text-white');
-        b.classList.add('text-gray-400');
-        if(b.getAttribute('onclick').includes(code)) {
-            b.classList.add('active', 'bg-dark-800', 'text-white');
-            b.classList.remove('text-gray-400');
-        }
-    });
-    renderFeed();
-}
-
-function setupListeners() {
-    document.getElementById('bet-input').addEventListener('input', calculateReturn);
-    document.getElementById('btn-apostar').addEventListener('click', placeBet);
-}
+// Listeners de Input
+document.getElementById('bet-amount').addEventListener('input', calcReturn);
