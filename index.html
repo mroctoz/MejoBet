@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MejoBet - Apostas</title>
+    <title>MejoBet - Apostas Esportivas Premium</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -11,141 +11,712 @@
             theme: {
                 extend: {
                     colors: {
-                        dark: { 900: '#0b0e14', 800: '#151b26', 700: '#2a3441', 600: '#475569' },
-                        brand: { 500: '#00e701', 600: '#00c201', 900: 'rgba(0, 231, 1, 0.1)' }
+                        dark: { 
+                            950: '#080b11',
+                            900: '#0b0e14', 
+                            850: '#0f1420',
+                            800: '#151b26', 
+                            750: '#1c2434',
+                            700: '#2a3441', 
+                            600: '#475569' 
+                        },
+                        brand: { 
+                            500: '#00e701', 
+                            600: '#00c201',
+                            700: '#00a001',
+                            900: 'rgba(0, 231, 1, 0.1)'
+                        },
+                        accent: {
+                            500: '#8b5cf6',
+                            600: '#7c3aed'
+                        }
                     },
-                    fontFamily: { sans: ['Inter', 'sans-serif'] }
+                    fontFamily: { 
+                        sans: ['Inter', 'sans-serif'],
+                        'digital': ['Orbitron', 'monospace']
+                    },
+                    backgroundImage: {
+                        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+                        'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
+                    },
+                    animation: {
+                        'pulse-glow': 'pulse-glow 2s infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                        'slide-in': 'slide-in 0.3s ease-out',
+                    },
+                    keyframes: {
+                        'pulse-glow': {
+                            '0%, 100%': { boxShadow: '0 0 5px rgba(0, 231, 1, 0.5)' },
+                            '50%': { boxShadow: '0 0 20px rgba(0, 231, 1, 0.8)' }
+                        },
+                        'float': {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' }
+                        },
+                        'slide-in': {
+                            '0%': { transform: 'translateX(100%)' },
+                            '100%': { transform: 'translateX(0)' }
+                        }
+                    }
                 }
             }
         }
     </script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        body { background-color: #0b0e14; }
-        /* Scrollbar fina e moderna */
-        ::-webkit-scrollbar { width: 5px; height: 5px; }
-        ::-webkit-scrollbar-thumb { background: #2a3441; border-radius: 4px; }
-        ::-webkit-scrollbar-track { background: transparent; }
+        /* Estilos personalizados */
+        body { 
+            background: linear-gradient(135deg, #080b11 0%, #0b0e14 50%, #0f1420 100%);
+            overflow-x: hidden;
+        }
+        
+        /* Efeito de partículas sutil no fundo */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(0, 231, 1, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 85% 30%, rgba(139, 92, 246, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 50% 80%, rgba(0, 231, 1, 0.03) 0%, transparent 20%);
+            z-index: -1;
+        }
+        
+        /* Scrollbar personalizada */
+        ::-webkit-scrollbar { 
+            width: 8px; 
+            height: 8px; 
+        }
+        ::-webkit-scrollbar-thumb { 
+            background: linear-gradient(to bottom, #00e701, #00a001);
+            border-radius: 6px; 
+        }
+        ::-webkit-scrollbar-track { 
+            background: rgba(21, 27, 38, 0.5); 
+            border-radius: 6px;
+        }
         
         /* Avatar Fallback */
         .avatar-fallback {
-            width: 28px; height: 28px;
-            display: flex; align-items: center; justify-content: center;
+            width: 28px; 
+            height: 28px;
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
             border-radius: 50%;
-            font-size: 11px; font-weight: 800; color: #fff;
+            font-size: 11px; 
+            font-weight: 800; 
+            color: #fff;
             text-shadow: 0 1px 2px rgba(0,0,0,0.5);
         }
-        .team-logo { width: 28px; height: 28px; object-fit: contain; }
+        
+        /* Efeitos de vidro (glassmorphism) */
+        .glass {
+            background: rgba(21, 27, 38, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .glass-dark {
+            background: rgba(11, 14, 20, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        /* Efeitos de gradiente nos textos */
+        .gradient-text {
+            background: linear-gradient(90deg, #00e701, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        /* Efeito de brilho nos botões */
+        .btn-glow:hover {
+            box-shadow: 0 0 20px rgba(0, 231, 1, 0.5);
+        }
+        
+        /* Estilos para os cards de jogos */
+        .game-card {
+            background: linear-gradient(145deg, rgba(21, 27, 38, 0.9), rgba(11, 14, 20, 0.9));
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .game-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, #00e701, #8b5cf6);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
+        }
+        
+        .game-card:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .game-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(0, 231, 1, 0.3);
+            box-shadow: 0 10px 25px rgba(0, 231, 1, 0.1);
+        }
+        
+        /* Estilos para os botões de odds */
+        .odd-btn {
+            background: rgba(21, 27, 38, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .odd-btn:hover {
+            background: rgba(21, 27, 38, 1);
+            border-color: rgba(0, 231, 1, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .odd-btn.selected {
+            background: linear-gradient(135deg, rgba(0, 231, 1, 0.2), rgba(0, 231, 1, 0.05));
+            border-color: #00e701;
+            box-shadow: 0 0 15px rgba(0, 231, 1, 0.3);
+        }
+        
+        .odd-btn.selected::after {
+            content: '✓';
+            position: absolute;
+            top: 2px;
+            right: 5px;
+            color: #00e701;
+            font-size: 10px;
+            font-weight: bold;
+        }
+        
+        /* Animações para entrada de elementos */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        
+        /* Efeito de brilho pulsante para saldo */
+        .balance-pulse {
+            animation: pulse-glow 2s infinite;
+        }
+        
+        /* Efeito de loading */
+        .loading-spinner {
+            border: 3px solid rgba(0, 231, 1, 0.1);
+            border-top: 3px solid #00e701;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Badge animado para o boletim */
+        .badge-pulse {
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .game-card {
+                padding: 1rem;
+            }
+            
+            .odd-btn {
+                padding: 0.5rem 0.25rem;
+                font-size: 0.875rem;
+            }
+        }
     </style>
 </head>
 <body class="text-gray-300 font-sans h-screen flex flex-col overflow-hidden">
 
-    <!-- Navbar -->
-    <header class="h-14 bg-dark-800 border-b border-dark-700 flex items-center justify-between px-4 shrink-0 z-30 shadow-md">
-        <div class="flex items-center gap-2 text-white font-bold text-lg tracking-tight">
-            <i class="fas fa-layer-group text-brand-500"></i> MejoBet
+    <!-- Navbar Premium -->
+    <header class="h-16 glass-dark border-b border-dark-700 flex items-center justify-between px-4 md:px-6 shrink-0 z-50">
+        <div class="flex items-center gap-3">
+            <div class="relative">
+                <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-brand-500 to-accent-500 flex items-center justify-center shadow-lg">
+                    <i class="fas fa-layer-group text-black text-xl"></i>
+                </div>
+                <div class="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full border-2 border-dark-800"></div>
+            </div>
+            <div class="flex flex-col">
+                <h1 class="text-white font-bold text-xl tracking-tight gradient-text">MejoBet</h1>
+                <p class="text-xs text-gray-500">APOSTAS ESPORTIVAS PREMIUM</p>
+            </div>
         </div>
-        <div class="flex items-center gap-3 bg-dark-900 py-1 px-3 rounded border border-dark-700">
-            <span class="text-[10px] text-gray-500 font-bold tracking-wider">BANCA</span>
-            <span class="text-brand-500 font-bold font-mono" id="header-balance">R$ --</span>
+        
+        <div class="flex items-center gap-4">
+            <!-- Notificações -->
+            <div class="relative">
+                <button class="w-10 h-10 rounded-full bg-dark-800 hover:bg-dark-700 flex items-center justify-center transition-all">
+                    <i class="fas fa-bell text-gray-400"></i>
+                </button>
+                <div class="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-dark-800"></div>
+            </div>
+            
+            <!-- Saldo do usuário -->
+            <div class="hidden md:flex items-center gap-3 bg-gradient-to-r from-dark-800 to-dark-900 py-2 px-4 rounded-xl border border-dark-700 shadow-lg">
+                <div class="flex flex-col items-end">
+                    <span class="text-[10px] text-gray-500 font-bold tracking-wider uppercase">SALDO</span>
+                    <span class="text-brand-500 font-bold font-digital text-lg balance-pulse" id="header-balance">R$ 1.250,80</span>
+                </div>
+                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-brand-500 to-accent-500 flex items-center justify-center">
+                    <i class="fas fa-coins text-black text-sm"></i>
+                </div>
+            </div>
+            
+            <!-- Avatar do usuário -->
+            <div class="flex items-center gap-2">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-brand-500 to-accent-500 flex items-center justify-center">
+                    <span class="font-bold text-black">JP</span>
+                </div>
+                <i class="fas fa-chevron-down text-gray-500 text-xs"></i>
+            </div>
         </div>
     </header>
 
     <div class="flex flex-1 overflow-hidden">
-        <!-- Sidebar -->
-        <aside class="w-16 md:w-60 bg-dark-800 border-r border-dark-700 flex flex-col hidden md:flex transition-all">
-            <nav class="p-2 space-y-1 mt-2">
-                <button onclick="filtrar('TODOS')" class="nav-btn active w-full text-left p-2 rounded hover:bg-dark-700 transition flex items-center gap-3 text-white bg-dark-700 group">
-                    <div class="w-8 h-8 rounded bg-dark-900 flex items-center justify-center group-hover:bg-dark-600 transition"><i class="fas fa-globe text-brand-500"></i></div>
-                    <span class="hidden md:inline font-medium text-sm">Todos</span>
+        <!-- Sidebar Esquerda - Premium -->
+        <aside class="w-16 md:w-64 glass-dark border-r border-dark-700 flex flex-col hidden md:flex transition-all duration-300 z-40">
+            <div class="p-4">
+                <div class="relative overflow-hidden rounded-xl bg-gradient-to-r from-dark-800 to-dark-900 p-4 mb-4 border border-dark-700">
+                    <div class="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-brand-900 to-transparent rounded-full -translate-y-8 translate-x-8"></div>
+                    <h3 class="text-white font-bold text-sm mb-1 relative z-10">Bônus de Boas-Vindas</h3>
+                    <p class="text-xs text-gray-400 relative z-10">Ganhe até R$ 500 em bônus</p>
+                    <button class="mt-3 text-xs bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-black font-bold py-2 px-3 rounded-lg transition-all btn-glow relative z-10">
+                        RESGATAR
+                    </button>
+                </div>
+            </div>
+            
+            <nav class="p-3 space-y-1 mt-2 flex-1">
+                <button onclick="filtrar('TODOS')" class="nav-btn active w-full text-left p-3 rounded-xl hover:bg-dark-750 transition-all flex items-center gap-3 text-white bg-gradient-to-r from-dark-750 to-dark-800 border border-dark-700 group shadow-md">
+                    <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-brand-500 to-accent-500 flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <i class="fas fa-globe text-black"></i>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="font-semibold text-sm">Todos os Eventos</span>
+                        <span class="text-xs text-gray-500">+200 opções</span>
+                    </div>
                 </button>
-                <button onclick="filtrar('BSA')" class="nav-btn w-full text-left p-2 rounded hover:bg-dark-700 transition flex items-center gap-3 text-gray-400 group">
-                    <div class="w-8 h-8 rounded bg-dark-900 flex items-center justify-center group-hover:bg-dark-600 transition"><i class="fas fa-futbol text-yellow-500"></i></div>
-                    <span class="hidden md:inline font-medium text-sm">Brasileirão</span>
+                
+                <button onclick="filtrar('BSA')" class="nav-btn w-full text-left p-3 rounded-xl hover:bg-dark-750 transition-all flex items-center gap-3 text-gray-300 group">
+                    <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-yellow-500 to-orange-500 flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <i class="fas fa-futbol text-black"></i>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="font-semibold text-sm">Brasileirão</span>
+                        <span class="text-xs text-gray-500">12 jogos ao vivo</span>
+                    </div>
                 </button>
-                <button onclick="filtrar('PL')" class="nav-btn w-full text-left p-2 rounded hover:bg-dark-700 transition flex items-center gap-3 text-gray-400 group">
-                    <div class="w-8 h-8 rounded bg-dark-900 flex items-center justify-center group-hover:bg-dark-600 transition"><i class="fas fa-crown text-purple-500"></i></div>
-                    <span class="hidden md:inline font-medium text-sm">Inglaterra</span>
+                
+                <button onclick="filtrar('PL')" class="nav-btn w-full text-left p-3 rounded-xl hover:bg-dark-750 transition-all flex items-center gap-3 text-gray-300 group">
+                    <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <i class="fas fa-crown text-black"></i>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="font-semibold text-sm">Premier League</span>
+                        <span class="text-xs text-gray-500">Inglaterra</span>
+                    </div>
                 </button>
-                <button onclick="filtrar('CL')" class="nav-btn w-full text-left p-2 rounded hover:bg-dark-700 transition flex items-center gap-3 text-gray-400 group">
-                    <div class="w-8 h-8 rounded bg-dark-900 flex items-center justify-center group-hover:bg-dark-600 transition"><i class="fas fa-star text-blue-500"></i></div>
-                    <span class="hidden md:inline font-medium text-sm">Champions</span>
+                
+                <button onclick="filtrar('CL')" class="nav-btn w-full text-left p-3 rounded-xl hover:bg-dark-750 transition-all flex items-center gap-3 text-gray-300 group">
+                    <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <i class="fas fa-star text-black"></i>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="font-semibold text-sm">Champions League</span>
+                        <span class="text-xs text-gray-500">8 jogos hoje</span>
+                    </div>
+                </button>
+                
+                <!-- Divisor -->
+                <div class="my-4 border-t border-dark-700"></div>
+                
+                <!-- Esportes adicionais -->
+                <div class="px-3 mb-2">
+                    <h4 class="text-xs font-bold text-gray-500 uppercase tracking-wider">Outros Esportes</h4>
+                </div>
+                
+                <button class="w-full text-left p-3 rounded-xl hover:bg-dark-750 transition-all flex items-center gap-3 text-gray-400 group">
+                    <div class="w-8 h-8 rounded-lg bg-dark-800 flex items-center justify-center">
+                        <i class="fas fa-basketball-ball text-orange-500 text-sm"></i>
+                    </div>
+                    <span class="font-medium text-sm">Basquete</span>
+                </button>
+                
+                <button class="w-full text-left p-3 rounded-xl hover:bg-dark-750 transition-all flex items-center gap-3 text-gray-400 group">
+                    <div class="w-8 h-8 rounded-lg bg-dark-800 flex items-center justify-content-center">
+                        <i class="fas fa-tennis-ball text-green-500 text-sm"></i>
+                    </div>
+                    <span class="font-medium text-sm">Tênis</span>
                 </button>
             </nav>
+            
             <div class="mt-auto p-4 border-t border-dark-700">
-                <button onclick="toggleHistory()" class="w-full py-2 bg-dark-700 hover:bg-dark-600 text-white rounded text-xs font-bold transition">HISTÓRICO</button>
+                <button onclick="toggleHistory()" class="w-full py-3 bg-gradient-to-r from-dark-800 to-dark-900 hover:from-dark-700 hover:to-dark-800 border border-dark-700 text-white rounded-xl text-sm font-bold transition-all flex items-center justify-center gap-2 shadow-md">
+                    <i class="fas fa-history"></i>
+                    HISTÓRICO
+                </button>
             </div>
         </aside>
 
-        <!-- Main Content -->
-        <main class="flex-1 overflow-y-auto relative p-2 md:p-6" id="main-content">
-            <!-- Loading -->
-            <div id="loading-indicator" class="flex flex-col items-center justify-center mt-20 text-brand-500 animate-pulse">
-                <i class="fas fa-circle-notch fa-spin text-3xl mb-2"></i>
-                <span class="text-sm font-bold">Carregando Odds...</span>
+        <!-- Conteúdo Principal -->
+        <main class="flex-1 overflow-y-auto relative p-4 md:p-6" id="main-content">
+            <!-- Banner Promocional -->
+            <div class="max-w-6xl mx-auto mb-6">
+                <div class="rounded-2xl overflow-hidden bg-gradient-to-r from-dark-800 via-dark-850 to-dark-800 border border-dark-700 shadow-xl p-5 relative">
+                    <div class="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-brand-900 to-accent-900 rounded-full -translate-y-32 translate-x-32 opacity-20"></div>
+                    <div class="relative z-10 flex flex-col md:flex-row items-center justify-between">
+                        <div class="mb-4 md:mb-0">
+                            <h2 class="text-white font-bold text-2xl mb-2">APOSTE NA <span class="gradient-text">CHAMPIONS LEAGUE</span></h2>
+                            <p class="text-gray-400">Ganhe um bônus de 50% em sua primeira aposta na competição</p>
+                        </div>
+                        <button class="bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-black font-bold py-3 px-6 rounded-xl transition-all btn-glow shadow-lg">
+                            APOSTAR AGORA <i class="fas fa-arrow-right ml-2"></i>
+                        </button>
+                    </div>
+                </div>
             </div>
             
-            <!-- Feed de Jogos -->
-            <div id="games-feed" class="max-w-3xl mx-auto space-y-6 pb-32"></div>
+            <!-- Jogos ao vivo (seção destacada) -->
+            <div class="max-w-6xl mx-auto mb-6">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-3 h-6 rounded-full bg-red-500 animate-pulse"></div>
+                        <h3 class="text-white font-bold text-xl">Jogos Ao Vivo <span class="text-red-500">•</span></h3>
+                        <span class="text-xs bg-red-900/30 text-red-400 px-2 py-1 rounded-full font-bold">6</span>
+                    </div>
+                    <button class="text-brand-500 hover:text-brand-400 text-sm font-medium transition-colors">
+                        Ver todos <i class="fas fa-arrow-right ml-1"></i>
+                    </button>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+                    <!-- Jogo ao vivo 1 -->
+                    <div class="game-card rounded-xl p-4 border border-red-900/30">
+                        <div class="flex justify-between items-start mb-3">
+                            <div class="flex items-center gap-2">
+                                <div class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></div>
+                                <span class="text-red-400 text-xs font-bold">AO VIVO</span>
+                                <span class="text-xs text-gray-500">45'</span>
+                            </div>
+                            <div class="text-xs px-2 py-1 rounded-full bg-dark-800 text-gray-400">Champions</div>
+                        </div>
+                        
+                        <div class="flex justify-between items-center mb-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-dark-800 flex items-center justify-center">
+                                    <span class="font-bold text-white">RM</span>
+                                </div>
+                                <div>
+                                    <p class="text-white font-medium text-sm">Real Madrid</p>
+                                    <p class="text-xs text-gray-500">Casa</p>
+                                </div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-xl font-bold text-white">2</div>
+                                <div class="text-xs text-gray-500">-</div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-dark-800 flex items-center justify-center">
+                                    <span class="font-bold text-white">MCI</span>
+                                </div>
+                                <div>
+                                    <p class="text-white font-medium text-sm">Man City</p>
+                                    <p class="text-xs text-gray-500">Fora</p>
+                                </div>
+                            </div>
+                            <div class="text-xl font-bold text-white">1</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Jogo ao vivo 2 -->
+                    <div class="game-card rounded-xl p-4 border border-red-900/30">
+                        <div class="flex justify-between items-start mb-3">
+                            <div class="flex items-center gap-2">
+                                <div class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></div>
+                                <span class="text-red-400 text-xs font-bold">AO VIVO</span>
+                                <span class="text-xs text-gray-500">32'</span>
+                            </div>
+                            <div class="text-xs px-2 py-1 rounded-full bg-dark-800 text-gray-400">Premier League</div>
+                        </div>
+                        
+                        <div class="flex justify-between items-center mb-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-dark-800 flex items-center justify-center">
+                                    <span class="font-bold text-white">LIV</span>
+                                </div>
+                                <div>
+                                    <p class="text-white font-medium text-sm">Liverpool</p>
+                                    <p class="text-xs text-gray-500">Casa</p>
+                                </div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-xl font-bold text-white">1</div>
+                                <div class="text-xs text-gray-500">-</div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-dark-800 flex items-center justify-center">
+                                    <span class="font-bold text-white">ARS</span>
+                                </div>
+                                <div>
+                                    <p class="text-white font-medium text-sm">Arsenal</p>
+                                    <p class="text-xs text-gray-500">Fora</p>
+                                </div>
+                            </div>
+                            <div class="text-xl font-bold text-white">0</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Mais jogos ao vivo -->
+                    <div class="game-card rounded-xl p-4 flex flex-col items-center justify-center border border-dark-700 hover:border-brand-500/30 transition-colors">
+                        <div class="w-12 h-12 rounded-full bg-dark-800 flex items-center justify-center mb-3">
+                            <i class="fas fa-play text-brand-500"></i>
+                        </div>
+                        <p class="text-white font-medium mb-1">+4 jogos ao vivo</p>
+                        <p class="text-xs text-gray-500">Clique para ver todos</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Feed de Jogos (próximos) -->
+            <div class="max-w-6xl mx-auto">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-white font-bold text-xl">Próximos Jogos</h3>
+                    <div class="flex gap-2">
+                        <button class="text-xs bg-dark-800 hover:bg-dark-700 text-gray-300 px-3 py-1.5 rounded-lg transition-colors">
+                            Hoje
+                        </button>
+                        <button class="text-xs bg-dark-800 hover:bg-dark-700 text-gray-300 px-3 py-1.5 rounded-lg transition-colors">
+                            Amanhã
+                        </button>
+                        <button class="text-xs bg-dark-800 hover:bg-dark-700 text-gray-300 px-3 py-1.5 rounded-lg transition-colors">
+                            Esta semana
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Loading -->
+                <div id="loading-indicator" class="flex flex-col items-center justify-center py-12 text-brand-500">
+                    <div class="loading-spinner mb-4"></div>
+                    <span class="text-sm font-bold">Carregando eventos...</span>
+                </div>
+                
+                <!-- Feed de Jogos -->
+                <div id="games-feed" class="space-y-4 pb-32 fade-in">
+                    <!-- Exemplo de jogo (será gerado dinamicamente) -->
+                    <div class="game-card rounded-xl p-5">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <div class="flex items-center gap-2 mb-1">
+                                    <div class="w-6 h-6 rounded-md bg-gradient-to-br from-yellow-500 to-orange-500 flex items-center justify-center">
+                                        <i class="fas fa-futbol text-black text-xs"></i>
+                                    </div>
+                                    <span class="text-xs text-gray-500 font-medium">Brasileirão Série A</span>
+                                </div>
+                                <p class="text-white font-bold">Flamengo vs Palmeiras</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-xs text-gray-500">Amanhã</p>
+                                <p class="text-white font-medium">16:00</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center justify-between mb-6">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-red-600 to-red-800 flex items-center justify-center">
+                                    <span class="font-bold text-white">FLA</span>
+                                </div>
+                                <div>
+                                    <p class="text-white font-medium">Flamengo</p>
+                                    <p class="text-xs text-gray-500">Casa</p>
+                                </div>
+                            </div>
+                            
+                            <div class="text-center">
+                                <p class="text-xs text-gray-500 mb-1">VS</p>
+                                <div class="px-3 py-1 bg-dark-800 rounded-full text-xs">22:00</div>
+                            </div>
+                            
+                            <div class="flex items-center gap-3">
+                                <div>
+                                    <p class="text-white font-medium text-right">Palmeiras</p>
+                                    <p class="text-xs text-gray-500 text-right">Fora</p>
+                                </div>
+                                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-green-600 to-green-800 flex items-center justify-center">
+                                    <span class="font-bold text-white">PAL</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-3 gap-2">
+                            <button class="odd-btn py-3 rounded-lg flex flex-col items-center justify-center">
+                                <span class="text-xs text-gray-500 mb-1">1</span>
+                                <span class="text-white font-bold">2.15</span>
+                            </button>
+                            <button class="odd-btn py-3 rounded-lg flex flex-col items-center justify-center">
+                                <span class="text-xs text-gray-500 mb-1">X</span>
+                                <span class="text-white font-bold">3.40</span>
+                            </button>
+                            <button class="odd-btn py-3 rounded-lg flex flex-col items-center justify-center">
+                                <span class="text-xs text-gray-500 mb-1">2</span>
+                                <span class="text-white font-bold">2.80</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </main>
 
         <!-- Sidebar Direita (Boletim) -->
-        <aside class="w-full md:w-80 bg-dark-800 border-t md:border-l border-dark-700 fixed bottom-0 md:relative md:h-full flex flex-col z-40 transform transition-transform translate-y-full md:translate-y-0 shadow-2xl" id="betslip-panel">
+        <aside class="w-full md:w-96 glass-dark border-t md:border-l border-dark-700 fixed bottom-0 md:relative md:h-full flex flex-col z-40 transform transition-transform duration-300 translate-y-full md:translate-y-0 shadow-2xl" id="betslip-panel">
             
             <!-- Mobile Handle -->
-            <button onclick="toggleMobileSlip()" class="md:hidden absolute -top-10 right-4 bg-brand-500 text-black px-4 py-2 rounded-t font-bold shadow-lg flex items-center gap-2">
+            <button onclick="toggleMobileSlip()" class="md:hidden absolute -top-12 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-brand-500 to-brand-600 text-black px-6 py-3 rounded-t-xl font-bold shadow-lg flex items-center gap-2">
+                <i class="fas fa-ticket-alt"></i>
                 <span>Boletim</span>
-                <span id="slip-badge" class="bg-black text-white text-[10px] px-1.5 py-0.5 rounded-full">0</span>
+                <span id="slip-badge" class="bg-black text-white text-xs px-2 py-1 rounded-full badge-pulse">0</span>
             </button>
 
-            <div class="p-4 bg-dark-900 border-b border-dark-700 hidden md:flex justify-between items-center">
-                <h3 class="font-bold text-white text-sm">Boletim de Aposta</h3>
-                <button onclick="clearSlip()" class="text-xs text-red-500 hover:text-red-400">Limpar</button>
+            <div class="p-5 bg-dark-900/80 border-b border-dark-700 flex justify-between items-center">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-brand-500 to-accent-500 flex items-center justify-center">
+                        <i class="fas fa-ticket-alt text-black"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-white text-sm">Boletim de Aposta</h3>
+                        <p class="text-xs text-gray-500">Adicione suas seleções</p>
+                    </div>
+                </div>
+                <button onclick="clearSlip()" class="text-xs text-gray-400 hover:text-red-400 transition-colors">
+                    <i class="fas fa-trash-alt mr-1"></i> Limpar
+                </button>
             </div>
 
             <!-- Lista de Apostas -->
-            <div id="slip-items" class="flex-1 overflow-y-auto p-4 space-y-3 bg-dark-800">
-                <div class="flex flex-col items-center justify-center h-full text-gray-600 opacity-50">
-                    <i class="fas fa-ticket-alt text-4xl mb-2"></i>
-                    <p class="text-xs">Selecione uma cotação</p>
+            <div id="slip-items" class="flex-1 overflow-y-auto p-5 space-y-4">
+                <div class="flex flex-col items-center justify-center h-full text-gray-600 opacity-50 py-12">
+                    <div class="w-16 h-16 rounded-full bg-dark-800 flex items-center justify-center mb-4">
+                        <i class="fas fa-ticket-alt text-2xl"></i>
+                    </div>
+                    <p class="text-sm font-medium mb-1">Boletim vazio</p>
+                    <p class="text-xs text-center">Selecione uma cotação para adicionar ao boletim</p>
                 </div>
             </div>
 
             <!-- Rodapé do Boletim -->
-            <div class="p-4 bg-dark-900 border-t border-dark-700 space-y-3">
-                <div class="flex justify-between text-xs text-gray-400">
-                    <span>Odds Totais</span>
-                    <span class="text-white font-bold text-sm" id="slip-total-odds">1.00</span>
+            <div class="p-5 bg-dark-900/80 border-t border-dark-700 space-y-4">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <span class="text-xs text-gray-400">Odds Totais</span>
+                        <p class="text-white font-bold text-xl" id="slip-total-odds">1.00</p>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-xs text-gray-400">Potencial Retorno</span>
+                        <p class="text-brand-500 font-bold text-xl" id="slip-return">R$ 0,00</p>
+                    </div>
                 </div>
                 
                 <div class="relative">
-                    <span class="absolute left-3 top-2.5 text-brand-500 font-bold text-xs">R$</span>
-                    <input type="number" id="bet-amount" class="w-full bg-dark-800 border border-dark-600 rounded p-2 pl-8 text-white text-sm focus:border-brand-500 focus:ring-1 focus:ring-brand-500 outline-none transition" placeholder="Valor">
+                    <span class="absolute left-3 top-3 text-brand-500 font-bold">R$</span>
+                    <input type="number" id="bet-amount" class="w-full bg-dark-800 border border-dark-600 rounded-xl p-3 pl-10 text-white text-lg focus:border-brand-500 focus:ring-2 focus:ring-brand-500/30 outline-none transition" placeholder="Valor da aposta" min="5" step="0.01">
                 </div>
 
-                <div class="flex justify-between text-sm">
-                    <span class="text-gray-400">Retorno Potencial</span>
-                    <span class="text-brand-500 font-bold" id="slip-return">R$ 0,00</span>
-                </div>
-
-                <button onclick="placeBet()" id="btn-place-bet" class="w-full bg-brand-600 hover:bg-brand-500 text-black font-bold py-3 rounded text-sm transition shadow-lg shadow-brand-900 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
-                    CONFIRMAR APOSTA
+                <button onclick="placeBet()" id="btn-place-bet" class="w-full bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-black font-bold py-4 rounded-xl text-base transition-all shadow-lg shadow-brand-900/30 disabled:opacity-50 disabled:cursor-not-allowed btn-glow" disabled>
+                    <i class="fas fa-lock mr-2"></i> CONFIRMAR APOSTA
                 </button>
+                
+                <div class="text-center">
+                    <p class="text-xs text-gray-500">Aposta mínima: R$ 5,00</p>
+                </div>
             </div>
         </aside>
     </div>
 
     <!-- Modal Histórico -->
-    <div id="history-modal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
-        <div class="bg-dark-800 w-full max-w-md rounded-lg shadow-2xl border border-dark-600 flex flex-col max-h-[80vh]">
-            <div class="p-4 border-b border-dark-700 flex justify-between items-center bg-dark-900 rounded-t-lg">
-                <h3 class="font-bold text-white">Minhas Apostas</h3>
-                <button onclick="toggleHistory()" class="text-gray-400 hover:text-white"><i class="fas fa-times"></i></button>
+    <div id="history-modal" class="hidden fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-dark-800 w-full max-w-2xl rounded-2xl shadow-2xl border border-dark-700 flex flex-col max-h-[90vh] animate-slide-in">
+            <div class="p-5 border-b border-dark-700 flex justify-between items-center bg-gradient-to-r from-dark-850 to-dark-800 rounded-t-2xl">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-brand-500 to-accent-500 flex items-center justify-center">
+                        <i class="fas fa-history text-black"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-white">Histórico de Apostas</h3>
+                        <p class="text-xs text-gray-500">Suas apostas recentes</p>
+                    </div>
+                </div>
+                <button onclick="toggleHistory()" class="text-gray-400 hover:text-white w-8 h-8 rounded-full bg-dark-700 flex items-center justify-center">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
-            <div id="history-list" class="p-4 overflow-y-auto space-y-3 bg-dark-800"></div>
+            <div id="history-list" class="p-5 overflow-y-auto space-y-4 bg-dark-800">
+                <!-- Exemplo de aposta no histórico -->
+                <div class="bg-dark-750 rounded-xl p-4 border border-dark-700">
+                    <div class="flex justify-between items-start mb-2">
+                        <div>
+                            <p class="text-white font-bold">Flamengo vs Palmeiras</p>
+                            <p class="text-xs text-gray-500">Brasileirão • 22/05/2023</p>
+                        </div>
+                        <span class="text-xs px-2 py-1 rounded-full bg-green-900/30 text-green-400 font-bold">+ R$ 45,50</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <p class="text-sm text-gray-300">Flamengo - Vitória</p>
+                            <p class="text-xs text-gray-500">Odd: 2.15 • Valor: R$ 20,00</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-xs text-gray-500">Status</p>
+                            <p class="text-green-400 text-sm font-bold">Ganhou</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
+    </div>
+
+    <!-- Botão para depósito (flutuante) -->
+    <div class="fixed bottom-24 right-6 z-40 md:hidden">
+        <button class="w-14 h-14 rounded-full bg-gradient-to-br from-brand-500 to-accent-500 text-black flex items-center justify-center shadow-xl">
+            <i class="fas fa-plus text-xl"></i>
+        </button>
     </div>
 
     <script src="app.js"></script>
@@ -162,6 +733,120 @@
             fallback.innerText = name.substring(0, 2).toUpperCase();
             image.parentNode.insertBefore(fallback, image);
         }
+        
+        // Funções de exemplo (serão implementadas no app.js)
+        function filtrar(categoria) {
+            console.log('Filtrar por:', categoria);
+            // Remover classe active de todos os botões
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+                btn.classList.remove('bg-gradient-to-r', 'from-dark-750', 'to-dark-800');
+                btn.classList.add('text-gray-300');
+            });
+            
+            // Adicionar classe active ao botão clicado
+            event.currentTarget.classList.add('active');
+            event.currentTarget.classList.add('bg-gradient-to-r', 'from-dark-750', 'to-dark-800');
+            event.currentTarget.classList.remove('text-gray-300');
+            
+            // Simular carregamento
+            document.getElementById('loading-indicator').classList.remove('hidden');
+            setTimeout(() => {
+                document.getElementById('loading-indicator').classList.add('hidden');
+            }, 500);
+        }
+        
+        function toggleHistory() {
+            const modal = document.getElementById('history-modal');
+            modal.classList.toggle('hidden');
+        }
+        
+        function toggleMobileSlip() {
+            const panel = document.getElementById('betslip-panel');
+            if (panel.classList.contains('translate-y-full')) {
+                panel.classList.remove('translate-y-full');
+                panel.classList.add('translate-y-0');
+            } else {
+                panel.classList.remove('translate-y-0');
+                panel.classList.add('translate-y-full');
+            }
+        }
+        
+        function clearSlip() {
+            document.getElementById('slip-badge').innerText = '0';
+            document.getElementById('slip-total-odds').innerText = '1.00';
+            document.getElementById('slip-return').innerText = 'R$ 0,00';
+            document.getElementById('btn-place-bet').disabled = true;
+            
+            const slipItems = document.getElementById('slip-items');
+            slipItems.innerHTML = `
+                <div class="flex flex-col items-center justify-center h-full text-gray-600 opacity-50 py-12">
+                    <div class="w-16 h-16 rounded-full bg-dark-800 flex items-center justify-center mb-4">
+                        <i class="fas fa-ticket-alt text-2xl"></i>
+                    </div>
+                    <p class="text-sm font-medium mb-1">Boletim vazio</p>
+                    <p class="text-xs text-center">Selecione uma cotação para adicionar ao boletim</p>
+                </div>
+            `;
+        }
+        
+        function placeBet() {
+            const amount = document.getElementById('bet-amount').value;
+            if (!amount || amount < 5) {
+                alert('Por favor, insira um valor de aposta válido (mínimo R$ 5,00)');
+                return;
+            }
+            
+            alert(`Aposta de R$ ${amount} confirmada com sucesso! Boa sorte!`);
+            clearSlip();
+            document.getElementById('bet-amount').value = '';
+        }
+        
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            // Simular carregamento inicial
+            setTimeout(() => {
+                document.getElementById('loading-indicator').classList.add('hidden');
+            }, 1000);
+            
+            // Adicionar eventos aos botões de odds
+            document.querySelectorAll('.odd-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    this.classList.toggle('selected');
+                    
+                    // Atualizar contador do boletim
+                    const selectedCount = document.querySelectorAll('.odd-btn.selected').length;
+                    document.getElementById('slip-badge').innerText = selectedCount;
+                    
+                    // Habilitar botão de aposta se houver seleções
+                    document.getElementById('btn-place-bet').disabled = selectedCount === 0;
+                    
+                    // Atualizar odds totais (simulação)
+                    if (selectedCount > 0) {
+                        const totalOdds = (1.5 * selectedCount).toFixed(2);
+                        document.getElementById('slip-total-odds').innerText = totalOdds;
+                        
+                        // Calcular retorno potencial
+                        const amount = document.getElementById('bet-amount').value || 0;
+                        const potentialReturn = (amount * totalOdds).toFixed(2);
+                        document.getElementById('slip-return').innerText = `R$ ${potentialReturn}`;
+                    } else {
+                        document.getElementById('slip-total-odds').innerText = '1.00';
+                        document.getElementById('slip-return').innerText = 'R$ 0,00';
+                    }
+                });
+            });
+            
+            // Atualizar retorno potencial ao digitar valor
+            document.getElementById('bet-amount').addEventListener('input', function() {
+                const selectedCount = document.querySelectorAll('.odd-btn.selected').length;
+                if (selectedCount > 0 && this.value) {
+                    const totalOdds = parseFloat(document.getElementById('slip-total-odds').innerText);
+                    const potentialReturn = (this.value * totalOdds).toFixed(2);
+                    document.getElementById('slip-return').innerText = `R$ ${potentialReturn}`;
+                }
+            });
+        });
     </script>
 </body>
 </html>
