@@ -85,9 +85,9 @@
             "placar_casa": null,
             "placar_fora": null,
             "odds": {
-                "home": 2.4,
+                "home": 2.38,
                 "draw": 3.3,
-                "away": 2.85
+                "away": 2.88
             }
         },
         {
@@ -103,9 +103,9 @@
             "placar_casa": null,
             "placar_fora": null,
             "odds": {
-                "home": 3.15,
-                "draw": 3.5,
-                "away": 2.15
+                "home": 3.25,
+                "draw": 3.58,
+                "away": 2.12
             }
         },
         {
@@ -122,7 +122,7 @@
             "placar_fora": null,
             "odds": {
                 "home": 1.52,
-                "draw": 4.3,
+                "draw": 4.4,
                 "away": 5.75
             }
         },
@@ -157,7 +157,7 @@
             "placar_casa": null,
             "placar_fora": null,
             "odds": {
-                "home": 5.0,
+                "home": 4.8,
                 "draw": 3.6,
                 "away": 1.65
             }
@@ -248,8 +248,8 @@
             "placar_fora": null,
             "odds": {
                 "home": 4.6,
-                "draw": 3.8,
-                "away": 1.67
+                "draw": 3.85,
+                "away": 1.66
             }
         },
         {
@@ -301,9 +301,27 @@
             "placar_casa": null,
             "placar_fora": null,
             "odds": {
-                "home": 1.52,
-                "draw": 3.02,
-                "away": 5.64
+                "home": 1.76,
+                "draw": 3.45,
+                "away": 3.79
+            }
+        },
+        {
+            "id": 554768,
+            "data": "2026-02-12T00:30:00Z",
+            "status": "TIMED",
+            "liga": "Campeonato Brasileiro S\u00e9rie A",
+            "liga_code": "BSA",
+            "time_casa": "Vasco da Gama",
+            "time_fora": "Bahia",
+            "brasao_casa": "https://crests.football-data.org/1780.png",
+            "brasao_fora": "https://crests.football-data.org/1777.png",
+            "placar_casa": null,
+            "placar_fora": null,
+            "odds": {
+                "home": 2.1,
+                "draw": 3.0,
+                "away": 2.8
             }
         },
         {
@@ -321,25 +339,7 @@
             "odds": {
                 "home": 2.05,
                 "draw": 3.0,
-                "away": 3.6
-            }
-        },
-        {
-            "id": 554768,
-            "data": "2026-02-12T00:30:00Z",
-            "status": "TIMED",
-            "liga": "Campeonato Brasileiro S\u00e9rie A",
-            "liga_code": "BSA",
-            "time_casa": "Vasco da Gama",
-            "time_fora": "Bahia",
-            "brasao_casa": "https://crests.football-data.org/1780.png",
-            "brasao_fora": "https://crests.football-data.org/1777.png",
-            "placar_casa": null,
-            "placar_fora": null,
-            "odds": {
-                "home": 2.15,
-                "draw": 3.0,
-                "away": 2.7
+                "away": 3.5
             }
         },
         {
@@ -445,9 +445,9 @@
             "placar_casa": null,
             "placar_fora": null,
             "odds": {
-                "home": 1.33,
-                "draw": 3.41,
-                "away": 11.92
+                "home": 1.76,
+                "draw": 3.27,
+                "away": 3.77
             }
         },
         {
@@ -481,9 +481,9 @@
             "placar_casa": null,
             "placar_fora": null,
             "odds": {
-                "home": 2.14,
-                "draw": 3.3,
-                "away": 2.73
+                "home": 1.8,
+                "draw": 2.95,
+                "away": 3.6
             }
         },
         {
@@ -499,9 +499,9 @@
             "placar_casa": null,
             "placar_fora": null,
             "odds": {
-                "home": 5.75,
-                "draw": 3.9,
-                "away": 1.53
+                "home": 6.0,
+                "draw": 4.0,
+                "away": 1.5
             }
         },
         {
@@ -517,9 +517,9 @@
             "placar_casa": null,
             "placar_fora": null,
             "odds": {
-                "home": 2.8,
-                "draw": 2.9,
-                "away": 2.55
+                "home": 2.7,
+                "draw": 2.95,
+                "away": 2.65
             }
         },
         {
@@ -589,8 +589,8 @@
             "placar_casa": null,
             "placar_fora": null,
             "odds": {
-                "home": 1.7,
-                "draw": 3.6,
+                "home": 1.72,
+                "draw": 3.5,
                 "away": 4.5
             }
         },
@@ -643,9 +643,9 @@
             "placar_casa": null,
             "placar_fora": null,
             "odds": {
-                "home": 2.91,
-                "draw": 2.6,
-                "away": 2.04
+                "home": 1.4,
+                "draw": 3.0,
+                "away": 8.38
             }
         },
         {
@@ -679,9 +679,9 @@
             "placar_casa": null,
             "placar_fora": null,
             "odds": {
-                "home": 1.93,
-                "draw": 2.74,
-                "away": 3.17
+                "home": 1.32,
+                "draw": 2.55,
+                "away": 13.35
             }
         },
         {
@@ -697,7 +697,7 @@
             "placar_casa": null,
             "placar_fora": null,
             "odds": {
-                "home": 3.25,
+                "home": 3.2,
                 "draw": 2.9,
                 "away": 2.3
             }
@@ -734,7 +734,7 @@
             "placar_fora": null,
             "odds": {
                 "home": 1.68,
-                "draw": 4.32,
+                "draw": 4.35,
                 "away": 4.77
             }
         },
@@ -751,9 +751,9 @@
             "placar_casa": null,
             "placar_fora": null,
             "odds": {
-                "home": 3.3,
+                "home": 3.5,
                 "draw": 3.1,
-                "away": 2.15
+                "away": 2.05
             }
         },
         {
@@ -787,8 +787,8 @@
             "placar_casa": null,
             "placar_fora": null,
             "odds": {
-                "home": 1.44,
-                "draw": 4.7,
+                "home": 1.43,
+                "draw": 4.75,
                 "away": 5.5
             }
         },
@@ -805,9 +805,9 @@
             "placar_casa": null,
             "placar_fora": null,
             "odds": {
-                "home": 2.51,
-                "draw": 3.1,
-                "away": 2.3
+                "home": 1.76,
+                "draw": 2.72,
+                "away": 3.76
             }
         },
         {
@@ -823,8 +823,8 @@
             "placar_casa": null,
             "placar_fora": null,
             "odds": {
-                "home": 1.75,
-                "draw": 4.12,
+                "home": 1.76,
+                "draw": 4.08,
                 "away": 4.5
             }
         },
@@ -841,9 +841,9 @@
             "placar_casa": null,
             "placar_fora": null,
             "odds": {
-                "home": 2.05,
+                "home": 2.0,
                 "draw": 3.25,
-                "away": 3.5
+                "away": 3.6
             }
         },
         {
@@ -859,7 +859,7 @@
             "placar_casa": null,
             "placar_fora": null,
             "odds": {
-                "home": 1.38,
+                "home": 1.39,
                 "draw": 5.4,
                 "away": 7.0
             }
