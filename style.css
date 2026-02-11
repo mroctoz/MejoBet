@@ -1,207 +1,358 @@
 /* =========================================
-   1. VARIÁVEIS E CONFIGURAÇÕES GERAIS
+   UI MODERNA & ESTÉTICA - BET365 INSPIRED
    ========================================= */
+
+/* 1. PALETA E VARIÁVEIS ATUALIZADAS */
 :root {
-    /* Paleta de Cores Inspirada na Bet365 */
-    --bet-green: #007d3c;
-    --bet-green-hover: #005a2b;
-    --bet-dark-bg: #181818;
-    --bet-panel-bg: #242424;
-    --bet-panel-border: #333333;
-    --bet-yellow: #ffdf1b;
-    --bet-text-main: #dddddd;
-    --bet-text-muted: #8e8e8e;
-    --bet-accent: #26ffbe; /* Verde Neon para destaques */
+    --bet-green: #00c16e;
+    --bet-green-hover: #00a85d;
+    --bet-dark-bg: #0d0f12;
+    --bet-panel-bg: #1a1d24;
+    --bet-panel-border: #2a303c;
+    --bet-yellow: #ffd700;
+    --bet-text-main: #f0f3f9;
+    --bet-text-muted: #8a93a5;
+    --bet-accent: #26ffbe;
+    --bet-accent-glow: rgba(38, 255, 190, 0.3);
+    --gradient-primary: linear-gradient(135deg, #007d3c 0%, #00c16e 100%);
+    --gradient-dark: linear-gradient(135deg, #0d0f12 0%, #1a1d24 100%);
+    --shadow-glowing: 0 0 15px rgba(0, 193, 110, 0.3);
+    --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.25);
+    --radius-lg: 12px;
+    --radius-md: 8px;
+    --radius-sm: 4px;
 }
 
+/* 2. RESET E CONFIGURAÇÕES GERAIS */
 *, *::before, *::after {
     box-sizing: border-box;
+    margin: 0;
+    padding: 0;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
 
 body {
-    background-color: var(--bet-dark-bg);
+    background: var(--bet-dark-bg);
+    background-image: 
+        radial-gradient(circle at 15% 50%, rgba(0, 193, 110, 0.03) 0%, transparent 55%),
+        radial-gradient(circle at 85% 30%, rgba(38, 255, 190, 0.02) 0%, transparent 55%);
     color: var(--bet-text-main);
-    font-family: 'Roboto', 'Segoe UI', sans-serif; /* Fonte padrão do setor */
-    overflow: hidden; /* Previne scroll duplo no body */
+    font-family: 'Roboto', 'Segoe UI', system-ui, sans-serif;
+    font-weight: 400;
+    line-height: 1.5;
+    overflow: hidden;
 }
 
-/* =========================================
-   2. SCROLLBARS PERSONALIZADAS (Dark Mode)
-   ========================================= */
-/* Webkit (Chrome, Edge, Safari) */
+/* 3. SCROLLBAR LUXO */
 ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+    width: 8px;
+    height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-    background: var(--bet-dark-bg);
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
-    background-color: #444;
-    border-radius: 3px;
+    background: linear-gradient(to bottom, var(--bet-green), var(--bet-accent));
+    border-radius: 4px;
+    border: 2px solid transparent;
+    background-clip: content-box;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background-color: #555;
+    background: linear-gradient(to bottom, var(--bet-green-hover), var(--bet-accent));
+    background-clip: content-box;
 }
 
-/* Firefox */
-* {
-    scrollbar-width: thin;
-    scrollbar-color: #444 var(--bet-dark-bg);
-}
-
-/* Utilitário para esconder scrollbar mas manter funcionalidade */
-.no-scrollbar::-webkit-scrollbar {
-    display: none;
-}
-.no-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-}
-
-/* =========================================
-   3. COMPONENTES DE INTERFACE
-   ========================================= */
-
-/* Botão de Odd (A célula clicável) */
+/* 4. BOTÕES ELEMENTARES */
 .odd-btn {
-    background-color: #383838;
-    color: #e4e4e4;
-    transition: all 0.2s ease;
+    background: linear-gradient(145deg, #2a303c, #22262f);
+    color: #f0f3f9;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: var(--radius-md);
+    padding: 10px 12px;
+    font-weight: 600;
     cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    min-width: 70px;
+    text-align: center;
+    box-shadow: var(--shadow-soft);
+}
+
+.odd-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transition: left 0.6s;
+}
+
+.odd-btn:hover:not(:disabled) {
+    background: linear-gradient(145deg, #333a48, #2a303c);
+    color: #fff;
+    border-color: rgba(0, 193, 110, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+}
+
+.odd-btn:hover:not(:disabled)::before {
+    left: 100%;
+}
+
+.odd-btn:active:not(:disabled) {
+    transform: translateY(0);
+    transition: transform 0.1s;
+}
+
+.odd-btn.selected {
+    background: linear-gradient(135deg, var(--bet-green) 0%, var(--bet-green-hover) 100%);
+    color: white;
+    border-color: transparent;
+    box-shadow: var(--shadow-glowing);
+}
+
+/* 5. BOTÕES DE NAVEGAÇÃO */
+.nav-btn {
+    background: transparent;
+    color: var(--bet-text-muted);
+    border: none;
+    padding: 12px 20px;
+    font-weight: 500;
+    font-size: 15px;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.nav-btn::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 3px;
+    background: var(--gradient-primary);
+    border-radius: 3px 3px 0 0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateX(-50%);
+}
+
+.nav-btn:hover, .nav-btn.active {
+    color: var(--bet-text-main);
+}
+
+.nav-btn.active::after {
+    width: 80%;
+}
+
+/* 6. CARDS DE JOGO MODERNOS */
+.game-card {
+    background: var(--bet-panel-bg);
+    border: 1px solid var(--bet-panel-border);
+    border-radius: var(--radius-lg);
+    padding: 18px;
+    margin: 10px 0;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
     position: relative;
     overflow: hidden;
 }
 
-.odd-btn:hover:not(:disabled) {
-    background-color: #4a4a4a;
-    color: #fff;
+.game-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--gradient-primary);
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
 
-.odd-btn:active:not(:disabled) {
-    transform: scale(0.98);
+.game-card:hover {
+    border-color: rgba(0, 193, 110, 0.4);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-soft);
 }
 
-.odd-btn.selected {
-    background-color: #505050;
-    border: 1px solid var(--bet-yellow);
-    color: var(--bet-yellow);
-}
-
-/* Botão de Navegação (Abas) */
-.nav-btn {
-    opacity: 0.7;
-    transition: all 0.2s ease;
-}
-.nav-btn:hover, .nav-btn.active {
+.game-card:hover::before {
     opacity: 1;
 }
-.nav-btn.active {
-    border-bottom: 2px solid var(--bet-text-main);
+
+/* 7. ANIMAÇÕES AVANÇADAS */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-/* Card de Jogo */
-.game-card {
-    background-color: var(--bet-panel-bg);
-    border-top: 1px solid var(--bet-panel-border);
-    border-bottom: 1px solid var(--bet-panel-border);
-    transition: background-color 0.2s;
-}
-.game-card:hover {
-    background-color: #2a2a2a; /* Leve destaque ao passar o mouse */
-}
-
-/* =========================================
-   4. ANIMAÇÕES E EFEITOS VISUAIS
-   ========================================= */
-
-/* Fade In Suave para elementos carregados */
 .fade-in {
-    animation: fadeIn 0.4s ease-out forwards;
-    opacity: 0;
+    animation: fadeInUp 0.5s cubic-bezier(0.23, 1, 0.32, 1) forwards;
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(5px); }
-    to { opacity: 1; transform: translateY(0); }
+@keyframes shimmer {
+    0% { background-position: -200% center; }
+    100% { background-position: 200% center; }
 }
 
-/* Pulso para jogos AO VIVO (Bolinha verde piscando) */
+.shimmer-effect {
+    background: linear-gradient(90deg, 
+        transparent 25%, 
+        rgba(255, 255, 255, 0.05) 50%, 
+        transparent 75%);
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite linear;
+}
+
+/* 8. INDICADOR AO VIVO (UPGRADED) */
 .live-indicator {
+    display: inline-flex;
+    align-items: center;
+    background: rgba(220, 38, 38, 0.1);
+    color: #ff6b6b;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    position: relative;
+}
+
+.live-indicator::before {
+    content: '';
     display: inline-block;
-    width: 6px;
-    height: 6px;
-    background-color: var(--bet-accent);
+    width: 8px;
+    height: 8px;
+    background: #ff4747;
     border-radius: 50%;
-    margin-right: 5px;
-    box-shadow: 0 0 0 0 rgba(38, 255, 190, 0.7);
-    animation: pulse-green 2s infinite;
+    margin-right: 6px;
+    animation: pulse-red 1.5s infinite;
+    box-shadow: 0 0 0 0 rgba(255, 71, 71, 0.7);
 }
 
-@keyframes pulse-green {
-    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(38, 255, 190, 0.7); }
-    70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(38, 255, 190, 0); }
-    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(38, 255, 190, 0); }
+@keyframes pulse-red {
+    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 71, 71, 0.7); }
+    70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(255, 71, 71, 0); }
+    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 71, 71, 0); }
 }
 
-/* Efeito de Flash quando uma Odd muda (Opcional para futuro) */
-@keyframes flash-up {
-    0% { background-color: rgba(0, 255, 0, 0.3); }
-    100% { background-color: transparent; }
-}
-@keyframes flash-down {
-    0% { background-color: rgba(255, 0, 0, 0.3); }
-    100% { background-color: transparent; }
-}
-
-/* =========================================
-   5. PLACEHOLDERS E IMAGENS
-   ========================================= */
-
-/* Fallback para quando a imagem do time não carrega */
+/* 9. AVATARES E LOGOS */
 .team-avatar-fallback {
-    width: 20px; 
-    height: 20px; 
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
-    display: flex; 
-    align-items: center; 
+    display: flex;
+    align-items: center;
     justify-content: center;
-    font-size: 9px; 
-    font-weight: 800; 
+    font-size: 12px;
+    font-weight: 800;
     color: #fff;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.8);
-    box-shadow: 0 0 2px rgba(0,0,0,0.5);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-/* Imagem oficial */
 .team-logo {
-    width: 20px;
-    height: 20px;
+    width: 32px;
+    height: 32px;
     object-fit: contain;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+    transition: transform 0.3s ease;
 }
 
-/* =========================================
-   6. MOBILE & RESPONSIVIDADE
-   ========================================= */
+.team-logo:hover {
+    transform: scale(1.1);
+}
 
-/* Bottom Sheet (Boletim Mobile) */
+/* 10. BOTTOMSHEET MOBILE ELEGANTE */
 #mobile-betslip {
-    box-shadow: 0 -4px 20px rgba(0,0,0,0.5);
-    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1); /* Animação estilo iOS */
+    background: var(--bet-panel-bg);
+    border-radius: 24px 24px 0 0;
+    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.5);
+    transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
 }
 
-/* Ajustes finos para telas pequenas */
+#mobile-betslip::before {
+    content: '';
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+}
+
+/* 11. RESPONSIVIDADE REFINADA */
 @media (max-width: 640px) {
     .odd-btn {
-        padding: 8px 4px; /* Mais área de toque */
+        padding: 12px 8px;
+        font-size: 14px;
+        min-width: 60px;
     }
     
     .game-card {
-        padding: 10px; /* Menos padding lateral no mobile */
+        padding: 14px;
+        margin: 8px 0;
+        border-radius: 16px;
     }
+    
+    .nav-btn {
+        padding: 10px 16px;
+        font-size: 14px;
+    }
+}
+
+/* 12. ELEMENTOS DE DESTAQUE */
+.highlight-glow {
+    position: relative;
+}
+
+.highlight-glow::after {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, var(--bet-green), var(--bet-accent));
+    border-radius: inherit;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.highlight-glow:hover::after {
+    opacity: 0.6;
+}
+
+/* 13. TEXTO GRADIENTE */
+.gradient-text {
+    background: linear-gradient(90deg, var(--bet-yellow), var(--bet-accent));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-weight: 700;
+}
+
+/* 14. BORDAS BRILHANTES */
+.glow-border {
+    border: 1px solid transparent;
+    background: linear-gradient(var(--bet-panel-bg), var(--bet-panel-bg)) padding-box,
+                linear-gradient(135deg, var(--bet-green), transparent) border-box;
 }
