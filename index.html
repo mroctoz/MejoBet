@@ -2,10 +2,10 @@
 <html lang="pt-br" class="dark">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MejoBet - Apostas Esportivas</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MejoBet - Apostas</title>
     
-    <!-- Tailwind CSS -->
+    <!-- Framework Visual (Tailwind) -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -14,307 +14,496 @@
                 extend: {
                     colors: {
                         bet: {
-                            header: '#007d3c',     // Verde Bet365 Header
-                            bg: '#181818',         // Fundo Geral
-                            panel: '#242424',      // Painel de jogo/Card
-                            panel_hover: '#323232',
-                            text: '#dddddd',       // Texto padrão
-                            text_muted: '#8e8e8e', // Texto secundário
-                            yellow: '#ffdf1b',     // Texto Odd
-                            green_light: '#26ffbe',// Destaques
-                            accent: '#383838'      // Botões secundários
+                            header: '#126e51', // Verde Institucional
+                            bg: '#202020',     // Fundo Dark
+                            card: '#2b2b2b',   // Fundo Cartão
+                            card_hover: '#333333',
+                            accent: '#ffdf1b', // Amarelo Odd
+                            live: '#00ffb4',   // Verde Ao Vivo
+                            text: '#e0e0e0',
+                            text_muted: '#999999'
                         }
                     },
-                    fontFamily: {
-                        sans: ['Roboto', 'Arial', 'sans-serif'],
-                    },
-                    fontSize: {
-                        'xxs': '0.65rem'
-                    }
+                    fontFamily: { sans: ['Roboto', 'sans-serif'] }
                 }
             }
         }
     </script>
-
-    <!-- Fontes e Ícones -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <style>
-        body { background-color: #181818; color: #ddd; }
+        body { background-color: #202020; color: #e0e0e0; -webkit-tap-highlight-color: transparent; }
         
-        /* Scrollbars Estilizadas */
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: #181818; }
-        ::-webkit-scrollbar-thumb { background: #444; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #555; }
-        
-        /* Utilitários */
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        
-        .team-avatar {
-            width: 20px; height: 20px; border-radius: 50%; 
-            display: flex; align-items: center; justify-content: center;
-            font-size: 9px; font-weight: bold; color: #fff;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+        /* Layout Grid da Partida (Igual Bet365) */
+        .match-grid {
+            display: grid;
+            grid-template-columns: 50px 1fr 130px; /* Tempo | Times | Odds */
+            align-items: center;
+            border-top: 1px solid #383838;
+            padding: 12px 10px;
+            background: #2b2b2b;
+            transition: background 0.2s;
         }
+        .match-grid:hover { background: #333; }
+
+        /* Coluna dos Times */
+        .teams-wrapper { display: flex; flex-direction: column; gap: 6px; padding-right: 10px; }
+        .team-row { display: flex; align-items: center; gap: 8px; height: 20px; }
         
-        /* Animações */
-        .fade-in { animation: fadeIn 0.3s ease-in; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        
-        .live-pulse {
-            width: 6px; height: 6px; background-color: #26ffbe;
+        /* Logos Fixos */
+        .team-logo { 
+            width: 18px; height: 18px; min-width: 18px; 
+            object-fit: contain; 
+        }
+        .logo-fallback {
+            width: 18px; height: 18px; min-width: 18px;
+            border-radius: 50%; font-size: 8px; font-weight: bold;
+            display: flex; align-items: center; justify-content: center; color: #000;
+        }
+
+        /* Botões de Aposta */
+        .odds-wrapper { display: flex; gap: 2px; }
+        .odd-btn {
+            background: #3e3e3e;
+            color: #ffdf1b;
+            flex: 1;
+            height: 40px;
+            border-radius: 2px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.1s;
+        }
+        .odd-btn:hover { background: #555; color: #fff; }
+        .odd-btn:active { transform: scale(0.98); }
+        .odd-header { font-size: 9px; color: #aaa; font-weight: normal; margin-bottom: -2px; }
+
+        /* Status Ao Vivo */
+        .live-dot {
+            width: 6px; height: 6px; background-color: #00ffb4;
             border-radius: 50%; display: inline-block;
+            box-shadow: 0 0 5px #00ffb4;
             animation: pulse 1.5s infinite;
         }
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(38, 255, 190, 0.7); }
-            70% { box-shadow: 0 0 0 6px rgba(38, 255, 190, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(38, 255, 190, 0); }
-        }
+        @keyframes pulse { 0% {opacity: 1;} 50% {opacity: 0.5;} 100% {opacity: 1;} }
+
+        /* Scrollbars */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-thumb { background: #444; border-radius: 4px; }
     </style>
 </head>
-<body class="h-screen flex flex-col overflow-hidden text-sm font-sans">
+<body class="flex flex-col h-screen overflow-hidden">
 
-    <!-- 1. HEADER PRINCIPAL -->
-    <header class="bg-bet-header text-white h-14 flex items-center justify-between px-4 shrink-0 shadow-lg z-50 relative">
-        <div class="flex items-center gap-4">
-            <!-- Logo -->
-            <a href="#" onclick="location.reload()" class="text-2xl font-bold italic tracking-tighter hover:opacity-90 flex items-center">
-                Mejo<span class="text-bet-yellow">Bet</span>
-            </a>
-            
-            <!-- Menu Desktop -->
-            <div class="hidden md:flex gap-6 text-xs font-bold text-gray-200 ml-6 h-full items-center">
-                <a href="#" class="hover:text-white opacity-100 border-b-2 border-white h-full flex items-center px-2">Esportes</a>
-                <a href="#" class="hover:text-white opacity-70 hover:opacity-100 h-full flex items-center px-2">Ao-Vivo</a>
-                <a href="#" class="hover:text-white opacity-70 hover:opacity-100 h-full flex items-center px-2">Cassino</a>
-            </div>
+    <!-- Header -->
+    <header class="bg-bet-header h-14 flex items-center justify-between px-4 shrink-0 shadow-lg z-20">
+        <div class="flex items-center gap-1">
+            <i class="fas fa-bars text-white/70 mr-3 text-lg"></i>
+            <span class="font-bold text-xl italic tracking-tighter text-white">Mejo<span class="text-bet-accent">Bet</span></span>
         </div>
-
-        <!-- Área do Usuário -->
+        
         <div class="flex items-center gap-3">
-            <div class="text-right leading-tight mr-1 hidden sm:block">
-                <div class="text-[10px] text-gray-300">Saldo Disponível</div>
-                <div class="font-bold text-bet-yellow text-sm" id="header-balance">R$ --</div>
+            <div class="text-right">
+                <div class="text-[10px] text-gray-300 font-bold uppercase">Saldo</div>
+                <div class="text-bet-accent font-bold text-sm" id="user-balance">R$ 0.00</div>
             </div>
-            
-            <div class="w-8 h-8 rounded-full bg-[#0b4d28] flex items-center justify-center border border-[#1a6b3e] cursor-pointer hover:bg-[#155e35] transition">
-                <i class="fas fa-user text-gray-200 text-xs"></i>
+            <div class="w-8 h-8 rounded-full bg-black/20 flex items-center justify-center text-white">
+                <i class="fas fa-user"></i>
             </div>
-            
-            <button class="bg-bet-yellow text-bet-header font-bold px-3 py-1.5 rounded text-xs hover:bg-white transition shadow-sm">
-                Depositar
-            </button>
         </div>
     </header>
 
-    <!-- 2. SUB-HEADER DE NAVEGAÇÃO (Scroll Horizontal) -->
-    <div class="bg-bet-panel border-b border-[#333] h-12 flex items-center px-2 gap-2 overflow-x-auto whitespace-nowrap shrink-0 text-gray-400 text-xs font-bold no-scrollbar z-40">
-        <button onclick="filtrar('TODOS')" class="nav-btn active flex flex-col items-center justify-center gap-1 hover:text-white text-white min-w-[60px] h-full border-b-2 border-transparent hover:border-bet-text">
-            <i class="fas fa-home"></i> <span>Tudo</span>
+    <!-- Navegação Ligas (Scroll Horizontal) -->
+    <div class="bg-[#2b2b2b] border-b border-[#383838] h-11 flex items-center px-2 gap-1 overflow-x-auto whitespace-nowrap shrink-0 text-xs text-gray-400 font-bold no-scrollbar">
+        <button onclick="filtrar('TODOS')" class="nav-item active px-3 h-full border-b-2 border-white text-white">Todos</button>
+        <button onclick="filtrar('IN_PLAY')" class="nav-item px-3 h-full border-b-2 border-transparent hover:text-white flex items-center gap-1">
+            <span class="live-dot"></span> Ao Vivo
         </button>
-        <div class="w-px h-6 bg-gray-600 mx-1"></div>
+        <button onclick="filtrar('BSA')" class="nav-item px-3 h-full border-b-2 border-transparent hover:text-white">Brasileirão</button>
+        <button onclick="filtrar('PL')" class="nav-item px-3 h-full border-b-2 border-transparent hover:text-white">Inglaterra</button>
+        <button onclick="filtrar('CL')" class="nav-item px-3 h-full border-b-2 border-transparent hover:text-white">Champions</button>
         
-        <button onclick="filtrar('BSA')" class="nav-btn flex flex-col items-center justify-center gap-1 hover:text-white min-w-[60px] h-full border-b-2 border-transparent hover:border-bet-text opacity-70 hover:opacity-100">
-            <i class="fas fa-futbol"></i> <span>Brasil</span>
-        </button>
-        <button onclick="filtrar('PL')" class="nav-btn flex flex-col items-center justify-center gap-1 hover:text-white min-w-[60px] h-full border-b-2 border-transparent hover:border-bet-text opacity-70 hover:opacity-100">
-            <i class="fas fa-crown"></i> <span>Inglês</span>
-        </button>
-        <button onclick="filtrar('PD')" class="nav-btn flex flex-col items-center justify-center gap-1 hover:text-white min-w-[60px] h-full border-b-2 border-transparent hover:border-bet-text opacity-70 hover:opacity-100">
-            <i class="fas fa-flag"></i> <span>Espanhol</span>
-        </button>
-        <button onclick="filtrar('CL')" class="nav-btn flex flex-col items-center justify-center gap-1 hover:text-white min-w-[60px] h-full border-b-2 border-transparent hover:border-bet-text opacity-70 hover:opacity-100">
-            <i class="fas fa-star"></i> <span>UEFA</span>
-        </button>
-        
-        <div class="flex-1"></div> <!-- Espaçador -->
-        
-        <button onclick="toggleHistory()" class="text-bet-yellow hover:text-white flex items-center gap-2 px-3 text-xs font-bold bg-bet-accent rounded py-1 border border-transparent hover:border-bet-yellow transition">
-            <i class="fas fa-history"></i> Minhas Apostas
-        </button>
+        <div class="flex-1"></div>
+        <button onclick="toggleHistory()" class="text-bet-accent px-3">Minhas Apostas</button>
     </div>
 
-    <!-- 3. LAYOUT PRINCIPAL -->
-    <div class="flex flex-1 overflow-hidden relative">
-        
-        <!-- Sidebar Esquerda (Desktop) -->
-        <aside class="w-56 bg-bet-bg border-r border-[#333] hidden lg:flex flex-col overflow-y-auto shrink-0">
-            <div class="p-3 text-xs font-bold text-bet-green_light uppercase tracking-wider mt-2">Competições</div>
-            <ul class="text-gray-300 text-xs space-y-1 px-2">
-                <li onclick="filtrar('BSA')" class="cursor-pointer hover:bg-bet-panel_hover p-2 rounded flex justify-between items-center group transition">
-                    <div class="flex items-center gap-2"><i class="fas fa-futbol text-gray-500 group-hover:text-white"></i> Brasileirão A</div>
-                </li>
-                <li onclick="filtrar('PL')" class="cursor-pointer hover:bg-bet-panel_hover p-2 rounded flex justify-between items-center group transition">
-                    <div class="flex items-center gap-2"><i class="fas fa-crown text-gray-500 group-hover:text-white"></i> Premier League</div>
-                </li>
-                <li onclick="filtrar('PD')" class="cursor-pointer hover:bg-bet-panel_hover p-2 rounded flex justify-between items-center group transition">
-                    <div class="flex items-center gap-2"><i class="fas fa-flag text-gray-500 group-hover:text-white"></i> La Liga</div>
-                </li>
-                <li onclick="filtrar('CL')" class="cursor-pointer hover:bg-bet-panel_hover p-2 rounded flex justify-between items-center group transition">
-                    <div class="flex items-center gap-2"><i class="fas fa-star text-gray-500 group-hover:text-white"></i> Champions</div>
-                </li>
-                <li onclick="filtrar('SA')" class="cursor-pointer hover:bg-bet-panel_hover p-2 rounded flex justify-between items-center group transition">
-                    <div class="flex items-center gap-2"><i class="fas fa-pizza-slice text-gray-500 group-hover:text-white"></i> Serie A</div>
-                </li>
-            </ul>
-        </aside>
+    <!-- Conteúdo Principal -->
+    <main class="flex-1 overflow-y-auto relative bg-bet-bg" id="main-content">
+        <!-- Loading -->
+        <div id="loading" class="text-center mt-10 text-gray-500 text-xs">
+            <i class="fas fa-circle-notch fa-spin text-bet-header text-2xl mb-2"></i><br>Atualizando Odds...
+        </div>
 
-        <!-- CONTEÚDO CENTRAL (Feed de Jogos) -->
-        <main class="flex-1 overflow-y-auto bg-bet-bg relative" id="main-content">
-            
-            <!-- Banner Promocional -->
-            <div class="bg-gradient-to-r from-bet-header to-[#005a2b] p-4 m-3 rounded flex justify-between items-center shadow-lg relative overflow-hidden group">
-                <div class="relative z-10">
-                    <div class="text-bet-yellow font-bold text-xs uppercase mb-1">Oferta de Boas-vindas</div>
-                    <div class="text-white font-bold text-lg leading-tight">Ganhe até R$200<br>em Créditos de Aposta</div>
-                    <button class="mt-2 bg-bet-yellow text-black text-xs font-bold px-3 py-1 rounded hover:bg-white transition">Ver Oferta</button>
-                </div>
-                <i class="fas fa-futbol text-[80px] text-white opacity-10 absolute -right-4 -bottom-6 transform group-hover:rotate-12 transition duration-700"></i>
-            </div>
+        <!-- Feed de Jogos -->
+        <div id="feed-container" class="pb-24"></div>
+    </main>
 
-            <!-- Loading Indicator -->
-            <div id="loading-indicator" class="flex flex-col items-center justify-center py-20 text-gray-500 animate-pulse">
-                <i class="fas fa-circle-notch fa-spin text-3xl mb-2 text-bet-green_light"></i>
-                <span class="text-xs">Carregando Odds em tempo real...</span>
-            </div>
-
-            <!-- Feed Container -->
-            <div id="games-feed" class="pb-32 px-2"></div>
-            
-        </main>
-
-        <!-- Sidebar Direita (Boletim) - Desktop -->
-        <aside class="w-72 bg-bet-panel border-l border-[#333] hidden lg:flex flex-col shrink-0 shadow-xl z-20" id="desktop-betslip">
-            <div class="bg-bet-header text-white p-3 text-sm font-bold flex justify-between items-center">
-                <span>Boletim de Aposta</span>
-                <span id="slip-count-desktop" class="bg-bet-yellow text-black text-xs w-5 h-5 flex items-center justify-center rounded-full font-bold">0</span>
-            </div>
-            
-            <!-- Itens do Boletim -->
-            <div id="slip-items" class="flex-1 overflow-y-auto p-3 space-y-2">
-                <div class="text-center text-gray-500 py-10 opacity-50">
-                    <i class="fas fa-ticket-alt text-4xl mb-2"></i>
-                    <p class="text-xs">Clique nas cotações para adicionar seleções</p>
-                </div>
-            </div>
-
-            <!-- Rodapé Boletim -->
-            <div class="bg-bet-accent p-3 border-t border-[#444]">
-                <div class="flex justify-between text-xs text-gray-400 mb-2">
-                    <span>Cotação Total:</span>
-                    <span class="text-white font-bold text-sm" id="total-odds">1.00</span>
-                </div>
-                
-                <div class="relative mb-2">
-                    <span class="absolute left-3 top-2 text-bet-green_light font-bold text-xs">R$</span>
-                    <input type="number" id="bet-input" class="w-full bg-[#222] border border-[#555] rounded p-1.5 pl-8 text-white text-sm focus:border-bet-green_light outline-none transition placeholder-gray-600" placeholder="Valor">
-                </div>
-                
-                <div class="flex justify-between text-xs mb-3">
-                    <span class="text-gray-400">Retorno Potencial:</span>
-                    <span class="text-bet-green_light font-bold" id="potential-return">R$ 0,00</span>
-                </div>
-                
-                <button id="btn-place-bet" class="w-full bg-bet-yellow hover:bg-white text-black font-bold py-3 rounded text-sm transition shadow disabled:opacity-50 disabled:cursor-not-allowed" disabled>
-                    Apostar
-                </button>
-            </div>
-        </aside>
-    </div>
-
-    <!-- BOLETIM MOBILE (Bottom Sheet) -->
-    <div id="mobile-betslip" class="lg:hidden fixed bottom-0 left-0 right-0 bg-bet-panel border-t border-bet-header z-50 transform translate-y-[92%] transition-transform duration-300 shadow-2xl">
-        <!-- Handle Header -->
-        <div class="bg-bet-header h-10 flex justify-between items-center px-4 cursor-pointer" onclick="toggleMobileSlip()">
+    <!-- BOLETIM DE APOSTA (Mobile Sticky Footer) -->
+    <div id="bet-slip-panel" class="fixed bottom-0 left-0 right-0 bg-[#2b2b2b] border-t border-bet-header z-50 transform translate-y-full transition-transform duration-300 shadow-2xl">
+        <!-- Header do Boletim -->
+        <div class="h-10 bg-bet-header flex justify-between items-center px-4 cursor-pointer" onclick="toggleSlip()">
             <div class="flex items-center gap-2">
-                <span class="bg-bet-yellow text-black text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center" id="slip-count-mobile">0</span>
-                <span class="text-white font-bold text-sm">Boletim</span>
+                <span class="bg-bet-accent text-black text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center" id="slip-count">0</span>
+                <span class="text-white font-bold text-sm">Boletim de Aposta</span>
             </div>
-            <i class="fas fa-chevron-up text-white text-xs transition-transform" id="mobile-slip-icon"></i>
+            <i class="fas fa-chevron-up text-white text-xs" id="slip-icon"></i>
         </div>
 
-        <!-- Conteúdo Boletim Mobile (Cópia da lógica) -->
-        <div class="p-4 h-[300px] flex flex-col">
-             <!-- Aviso: O JS vai preencher o #slip-items. Para mobile, usamos o mesmo container lógico ou duplicamos via JS. 
-                  Para simplificar neste código único, o JS vai manipular o #slip-items que está na sidebar desktop 
-                  e clonaremos visualmente ou moveremos se necessário. 
-                  
-                  Neste design, para ser 100% funcional sem JS complexo de clonagem, vamos manter o input e botão aqui também
-                  conectados à mesma lógica. -->
-            
-            <div class="text-center text-gray-500 text-xs py-2">
-                Use a versão Desktop para melhor experiência ou expanda para ver detalhes.
+        <!-- Conteúdo do Boletim -->
+        <div class="p-4 bg-[#2b2b2b]">
+            <div id="slip-content">
+                <!-- Inserido via JS -->
             </div>
             
-            <!-- Input Mobile -->
-             <div class="mt-auto space-y-2">
-                <div class="flex justify-between text-xs text-gray-400">
-                    <span>Retorno:</span>
-                    <span class="text-bet-green_light font-bold" id="mobile-potential">R$ 0,00</span>
+            <div class="mt-4 pt-4 border-t border-[#444]">
+                <div class="flex justify-between text-xs text-gray-400 mb-2">
+                    <span>Retorno Potencial:</span>
+                    <span class="text-bet-accent font-bold text-sm" id="slip-return">R$ 0.00</span>
                 </div>
-                <input type="number" id="mobile-bet-input" class="w-full bg-[#222] border border-[#555] rounded p-2 text-white text-sm focus:border-bet-green_light outline-none" placeholder="Valor da Aposta">
-                <button id="mobile-btn-place" class="w-full bg-bet-yellow text-black font-bold py-3 rounded text-sm">Confirmar Aposta</button>
+                
+                <div class="flex gap-2">
+                    <input type="number" id="bet-amount" class="bg-[#1a1a1a] border border-[#444] text-white text-sm rounded p-3 w-1/3 outline-none focus:border-bet-header" placeholder="Valor">
+                    <button onclick="placeBet()" class="bg-bet-accent text-black font-bold text-sm rounded w-2/3 hover:bg-white transition">CONFIRMAR APOSTA</button>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- MODAL HISTÓRICO -->
+    <!-- Modal Histórico -->
     <div id="history-modal" class="hidden fixed inset-0 bg-black/80 z-[60] flex items-center justify-center p-4 backdrop-blur-sm">
-        <div class="bg-bet-panel w-full max-w-md rounded-lg shadow-2xl border border-[#444] flex flex-col max-h-[85vh]">
-            <div class="p-4 border-b border-[#444] flex justify-between items-center bg-bet-header rounded-t-lg">
-                <h3 class="font-bold text-white">Minhas Apostas</h3>
-                <button onclick="toggleHistory()" class="text-gray-300 hover:text-white"><i class="fas fa-times"></i></button>
+        <div class="bg-[#2b2b2b] w-full max-w-md rounded shadow-lg border border-[#444] max-h-[80vh] flex flex-col">
+            <div class="p-3 border-b border-[#444] flex justify-between items-center bg-bet-header">
+                <h3 class="font-bold text-white text-sm">Histórico</h3>
+                <button onclick="toggleHistory()" class="text-white"><i class="fas fa-times"></i></button>
             </div>
-            <div id="history-list" class="p-4 overflow-y-auto space-y-3 bg-bet-bg">
-                <!-- JS Preenche -->
-            </div>
+            <div id="history-list" class="p-3 overflow-y-auto space-y-2 bg-[#202020]"></div>
         </div>
     </div>
 
-    <!-- Script de Lógica -->
-    <script src="app.js"></script>
-    
-    <!-- Script de Fallback de Imagem -->
+    <!-- Lógica JavaScript Completa -->
     <script>
-        function imgError(image, name, color) {
-            image.onerror = ""; 
-            image.style.display = "none";
-            const fallback = document.createElement("div");
-            fallback.className = "team-avatar";
-            fallback.style.backgroundColor = color;
-            fallback.innerText = name.substring(0, 2).toUpperCase();
-            image.parentNode.insertBefore(fallback, image);
-        }
+        // --- ESTADO ---
+        const STATE = {
+            balance: 250.00,
+            games: [], // Todos os jogos carregados
+            cart: [],  // Aposta atual
+            bets: [],  // Histórico
+            filter: 'TODOS'
+        };
 
-        // Lógica simples para Mobile Slip Toggle
-        let mobileSlipOpen = false;
-        function toggleMobileSlip() {
-            const el = document.getElementById('mobile-betslip');
-            const icon = document.getElementById('mobile-slip-icon');
-            if(mobileSlipOpen) {
-                el.style.transform = 'translateY(92%)';
-                icon.style.transform = 'rotate(0deg)';
-            } else {
-                el.style.transform = 'translateY(0%)';
-                icon.style.transform = 'rotate(180deg)';
+        const API_URL = 'dados_futebol.json';
+
+        // --- INICIALIZAÇÃO ---
+        document.addEventListener('DOMContentLoaded', () => {
+            loadUserData();
+            fetchData();
+            
+            // Polling para "Tempo Real" (Atualiza a cada 30s)
+            setInterval(fetchData, 30000);
+            
+            // Listener de input
+            document.getElementById('bet-amount').addEventListener('input', calcReturn);
+        });
+
+        // --- FETCH DADOS ---
+        async function fetchData() {
+            try {
+                // Adiciona timestamp para evitar cache do navegador
+                const res = await fetch(API_URL + '?t=' + Date.now());
+                if (!res.ok) throw new Error("Aguardando geração do arquivo...");
+                
+                const data = await res.json();
+                
+                // Salva jogos no estado global
+                STATE.games = data.jogos || [];
+                
+                // Verifica se ganhou alguma aposta antiga
+                checkResults();
+                
+                renderFeed();
+                document.getElementById('loading').style.display = 'none';
+                
+            } catch (e) {
+                console.log("Sincronizando...", e);
             }
-            mobileSlipOpen = !mobileSlipOpen;
         }
 
-        // Sincronizar inputs mobile/desktop (Gambiarra visual funcional)
-        document.getElementById('mobile-bet-input').addEventListener('input', function(e) {
-            document.getElementById('bet-input').value = e.target.value;
-            // Dispara evento para o app.js calcular
-            document.getElementById('bet-input').dispatchEvent(new Event('input'));
-        });
+        // --- RENDERIZAÇÃO ---
+        function renderFeed() {
+            const container = document.getElementById('feed-container');
+            container.innerHTML = '';
+
+            // 1. Filtragem
+            const filtered = STATE.games.filter(g => {
+                if (STATE.filter === 'TODOS') return true;
+                if (STATE.filter === 'IN_PLAY') return g.status === 'IN_PLAY' || g.status === 'PAUSED';
+                return g.liga_code === STATE.filter;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = '<div class="text-center text-gray-500 py-10 text-xs">Nenhum jogo disponível no momento.</div>';
+                return;
+            }
+
+            // 2. Agrupamento por Liga (Estilo Bet365)
+            const grouped = {};
+            filtered.forEach(g => {
+                if (!grouped[g.liga]) grouped[g.liga] = [];
+                grouped[g.liga].push(g);
+            });
+
+            // 3. Gerar HTML
+            for (const [liga, jogos] of Object.entries(grouped)) {
+                // Cabeçalho da Liga
+                const header = document.createElement('div');
+                header.className = 'bg-[#333] px-3 py-1.5 text-[10px] font-bold text-[#ccc] uppercase tracking-wide border-t border-[#444] sticky top-0 z-10';
+                header.innerText = liga;
+                container.appendChild(header);
+
+                jogos.forEach(game => {
+                    const isLive = game.status === 'IN_PLAY' || game.status === 'PAUSED';
+                    const timeText = isLive ? (game.status === 'PAUSED' ? 'INT' : 'AO VIVO') : formatTime(game.data);
+                    const timeClass = isLive ? 'text-bet-live font-bold animate-pulse' : 'text-bet-text_muted';
+                    
+                    // Scores (mostra só se for ao vivo)
+                    const scoreHome = isLive ? game.placar_casa : '';
+                    const scoreAway = isLive ? game.placar_fora : '';
+
+                    // Criação do Elemento
+                    const div = document.createElement('div');
+                    div.className = 'match-grid';
+                    div.innerHTML = `
+                        <!-- Tempo -->
+                        <div class="flex flex-col items-center justify-center text-[10px]">
+                            <span class="${timeClass}">${timeText}</span>
+                            <span class="text-[#666] mt-1 text-[9px]">ID:${game.id.toString().slice(-4)}</span>
+                        </div>
+
+                        <!-- Times -->
+                        <div class="teams-wrapper">
+                            <div class="team-row">
+                                ${renderLogo(game.brasao_casa, game.time_casa)}
+                                <span class="text-sm text-white font-medium truncate flex-1">${game.time_casa}</span>
+                                <span class="text-bet-accent font-bold text-sm">${scoreHome}</span>
+                            </div>
+                            <div class="team-row">
+                                ${renderLogo(game.brasao_fora, game.time_fora)}
+                                <span class="text-sm text-white font-medium truncate flex-1">${game.time_fora}</span>
+                                <span class="text-bet-accent font-bold text-sm">${scoreAway}</span>
+                            </div>
+                        </div>
+
+                        <!-- Odds -->
+                        <div class="odds-wrapper">
+                            <div class="odd-btn" onclick="addToSlip(${game.id}, 'home', ${game.odds.home})">
+                                <span class="odd-header">1</span>${game.odds.home.toFixed(2)}
+                            </div>
+                            <div class="odd-btn" onclick="addToSlip(${game.id}, 'draw', ${game.odds.draw})">
+                                <span class="odd-header">X</span>${game.odds.draw.toFixed(2)}
+                            </div>
+                            <div class="odd-btn" onclick="addToSlip(${game.id}, 'away', ${game.odds.away})">
+                                <span class="odd-header">2</span>${game.odds.away.toFixed(2)}
+                            </div>
+                        </div>
+                    `;
+                    container.appendChild(div);
+                });
+            }
+        }
+
+        // --- SISTEMA DE APOSTAS ---
+        function addToSlip(gameId, pick, odd) {
+            // Busca o jogo completo no State para garantir dados corretos
+            const game = STATE.games.find(g => g.id === gameId);
+            if (!game) return;
+
+            let pickName = pick === 'draw' ? 'Empate' : (pick === 'home' ? game.time_casa : game.time_fora);
+
+            STATE.cart = [{
+                gameId: game.id,
+                matchName: `${game.time_casa} x ${game.time_fora}`,
+                pick: pick, // 'home', 'draw', 'away'
+                pickName: pickName,
+                odd: odd
+            }];
+
+            renderSlip();
+            openSlip();
+        }
+
+        function renderSlip() {
+            const container = document.getElementById('slip-content');
+            if (STATE.cart.length === 0) {
+                container.innerHTML = '';
+                return;
+            }
+            const item = STATE.cart[0];
+            container.innerHTML = `
+                <div class="bg-[#222] p-3 rounded border-l-4 border-bet-header relative">
+                    <button onclick="clearSlip()" class="absolute top-2 right-2 text-gray-500"><i class="fas fa-times"></i></button>
+                    <div class="text-[10px] text-bet-header font-bold uppercase mb-1">Resultado Final</div>
+                    <div class="text-sm text-white font-bold mb-1">${item.pickName}</div>
+                    <div class="text-xs text-gray-400">${item.matchName}</div>
+                    <div class="absolute bottom-3 right-3 bg-bet-header text-white px-2 py-0.5 rounded text-xs font-bold">
+                        ${item.odd.toFixed(2)}
+                    </div>
+                </div>
+            `;
+            document.getElementById('slip-count').innerText = '1';
+        }
+
+        function placeBet() {
+            const input = document.getElementById('bet-amount');
+            const val = parseFloat(input.value);
+
+            if (!val || val <= 0) return alert("Valor inválido");
+            if (val > STATE.balance) return alert("Saldo insuficiente");
+
+            STATE.balance -= val;
+            
+            const bet = {
+                ...STATE.cart[0],
+                stake: val,
+                potential: val * STATE.cart[0].odd,
+                status: 'OPEN',
+                date: new Date().toISOString()
+            };
+
+            STATE.bets.unshift(bet);
+            saveUserData();
+            clearSlip();
+            alert("Aposta confirmada!");
+            closeSlip();
+        }
+
+        // --- CHECAGEM DE RESULTADOS ---
+        function checkResults() {
+            let changed = false;
+            STATE.bets.forEach(bet => {
+                if (bet.status === 'OPEN') {
+                    // Procura o jogo no JSON atualizado
+                    const game = STATE.games.find(g => g.id === bet.gameId);
+                    
+                    // Só verifica se o jogo acabou (FINISHED)
+                    if (game && game.status === 'FINISHED') {
+                        let result = 'draw';
+                        if (game.placar_casa > game.placar_fora) result = 'home';
+                        if (game.placar_fora > game.placar_casa) result = 'away';
+
+                        if (bet.pick === result) {
+                            bet.status = 'WON';
+                            STATE.balance += bet.potential;
+                        } else {
+                            bet.status = 'LOST';
+                        }
+                        changed = true;
+                    }
+                }
+            });
+
+            if (changed) {
+                saveUserData();
+                alert("Resultados atualizados! Verifique seu saldo.");
+            }
+        }
+
+        // --- UTILITÁRIOS ---
+        function renderLogo(url, name) {
+            // Gera um placeholder colorido se a imagem falhar ou não existir
+            const color = stringToColor(name);
+            const initial = name.substring(0, 2).toUpperCase();
+            
+            if (url && url.length > 5) {
+                return `<img src="${url}" class="team-logo" onerror="this.replaceWith(createFallback('${initial}', '${color}'))">`;
+            }
+            return `<div class="logo-fallback" style="background:${color}">${initial}</div>`;
+        }
+
+        function createFallback(text, color) {
+            const div = document.createElement('div');
+            div.className = 'logo-fallback';
+            div.style.background = color;
+            div.innerText = text;
+            return div;
+        }
+
+        function stringToColor(str) {
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) hash = str.charCodeAt(i) + ((hash << 5) - hash);
+            const c = (hash & 0x00FFFFFF).toString(16).toUpperCase();
+            return '#' + '00000'.substring(0, 6 - c.length) + c;
+        }
+
+        function formatTime(iso) {
+            return new Date(iso).toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'});
+        }
+
+        // --- UI MANAGERS ---
+        function loadUserData() {
+            const b = localStorage.getItem('mb_balance');
+            if (b) STATE.balance = parseFloat(b);
+            const h = localStorage.getItem('mb_history');
+            if (h) STATE.bets = JSON.parse(h);
+            updateBalanceUI();
+        }
+        function saveUserData() {
+            localStorage.setItem('mb_balance', STATE.balance.toFixed(2));
+            localStorage.setItem('mb_history', JSON.stringify(STATE.bets));
+            updateBalanceUI();
+        }
+        function updateBalanceUI() {
+            document.getElementById('user-balance').innerText = `R$ ${STATE.balance.toFixed(2)}`;
+        }
         
-        document.getElementById('mobile-btn-place').addEventListener('click', function() {
-            document.getElementById('btn-place-bet').click();
-        });
+        function filtrar(code) {
+            STATE.filter = code;
+            // UI Update
+            document.querySelectorAll('.nav-item').forEach(b => {
+                b.classList.remove('border-white', 'text-white');
+                b.classList.add('border-transparent');
+                if (b.getAttribute('onclick').includes(code)) {
+                    b.classList.add('border-white', 'text-white');
+                    b.classList.remove('border-transparent');
+                }
+            });
+            renderFeed();
+        }
+
+        function openSlip() { document.getElementById('bet-slip-panel').style.transform = 'translateY(0%)'; }
+        function closeSlip() { document.getElementById('bet-slip-panel').style.transform = 'translateY(100%)'; }
+        function toggleSlip() { 
+            const el = document.getElementById('bet-slip-panel');
+            const isClosed = el.style.transform === 'translateY(100%)' || el.style.transform === '';
+            el.style.transform = isClosed ? 'translateY(0%)' : 'translateY(100%)';
+        }
+        function clearSlip() { STATE.cart = []; renderSlip(); document.getElementById('bet-amount').value = ''; closeSlip(); }
+        function calcReturn() {
+            const v = parseFloat(document.getElementById('bet-amount').value);
+            const o = STATE.cart[0] ? STATE.cart[0].odd : 0;
+            const r = v ? (v * o).toFixed(2) : '0.00';
+            document.getElementById('slip-return').innerText = `R$ ${r}`;
+        }
+        function toggleHistory() {
+            const el = document.getElementById('history-modal');
+            el.classList.toggle('hidden');
+            if (!el.classList.contains('hidden')) renderHistory();
+        }
+        function renderHistory() {
+            const l = document.getElementById('history-list');
+            l.innerHTML = '';
+            STATE.bets.forEach(b => {
+                let color = b.status === 'WON' ? 'text-green-400' : (b.status === 'LOST' ? 'text-red-400' : 'text-gray-400');
+                l.innerHTML += `
+                    <div class="bg-[#2b2b2b] p-2 rounded border border-[#444] text-xs">
+                        <div class="flex justify-between font-bold text-white"><span>${b.matchName}</span> <span>R$${b.stake}</span></div>
+                        <div class="flex justify-between mt-1"><span class="text-gray-400">${b.pickName} (@${b.odd})</span> <span class="${color} font-bold">${b.status}</span></div>
+                    </div>`;
+            });
+        }
     </script>
 </body>
 </html>
